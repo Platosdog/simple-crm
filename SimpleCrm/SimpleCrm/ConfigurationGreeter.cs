@@ -9,11 +9,14 @@ namespace SimpleCrm
     {
         public ConfigurationGreeter(IConfiguration configuration)
         {
-
+            Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
+
         public string GetGreeting()
         {
-            return "A configured greeting";
+            return Configuration["Greeting"];
         }
     }
 }

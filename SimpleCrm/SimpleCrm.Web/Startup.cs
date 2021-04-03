@@ -13,12 +13,7 @@ namespace SimpleCrm.Web
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; } // NEW - Injected Property
 
-        public Startup(IConfiguration configuration)  // NEW - Inject needed service into constructor
-        {
-            Configuration = configuration; // NEW - Set the Injected property
-        }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
