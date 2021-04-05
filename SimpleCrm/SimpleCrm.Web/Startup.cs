@@ -29,6 +29,8 @@ namespace SimpleCrm.Web
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseWelcomePage(new WelcomePageOptions { Path = "/welcome" });
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
