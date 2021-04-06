@@ -26,7 +26,14 @@ namespace SimpleCrm.Web
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {  
+                app.UseExceptionHandler(new ExceptionHandlerOptions
+                {
+                    ExceptionHandler = context => context.Response.WriteAsync("Oops!")
+                });
             }
 
             app.UseWelcomePage(new WelcomePageOptions { Path = "/welcome" });
