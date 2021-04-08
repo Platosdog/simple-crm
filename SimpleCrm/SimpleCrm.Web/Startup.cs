@@ -35,6 +35,8 @@ namespace SimpleCrm.Web
                     ExceptionHandler = context => context.Response.WriteAsync("Oops!")
                 });
             }
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseWelcomePage(new WelcomePageOptions { Path = "/welcome" });
 
