@@ -44,7 +44,7 @@ namespace SimpleCrm.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
+                endpoints.MapGet("/Hello", async context =>
                 {
                     var greeting = greeter.GetGreeting();
                     await context.Response.WriteAsync(greeting);
