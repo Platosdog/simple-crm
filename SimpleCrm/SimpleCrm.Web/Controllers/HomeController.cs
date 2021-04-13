@@ -7,9 +7,9 @@ namespace SimpleCrm.Web.Controllers
 {
     public class HomeController
     {
-        public string Index()
+        public string Index(string id)
         {
-            return "Hello from a Controller";
+            return "Hello from a Controller " + id;
         }
     }
 }
