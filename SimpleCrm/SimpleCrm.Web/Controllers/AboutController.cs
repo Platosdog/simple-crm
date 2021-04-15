@@ -1,19 +1,23 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleCrm.Web.Controllers
 {
+    [Route("about")]
     public class AboutController
     {
-        public string Phone(string id)
+        [Route("phone")]
+        public string Phone()
         {
-            return "999-999-9999";
+            return "555-555-1234";
         }
-            public string Adress(string id)
-            {
-                return "USA";
-            }
+        [Route("Address")]
+        public string Address()
+        {
+            return "USA";
+        }
     }
 }
