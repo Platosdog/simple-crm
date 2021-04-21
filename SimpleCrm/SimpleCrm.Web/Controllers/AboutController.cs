@@ -9,7 +9,7 @@ namespace SimpleCrm.Web.Controllers
     [Route("about")]
     public class AboutController
     {
-        [Route("phone")]
+        [Route("phone"), Route("")]
         public string Phone()
         {
             return "555-555-1234";
