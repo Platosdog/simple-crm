@@ -1,26 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SimpleCrm.Web.Models;
 
 namespace SimpleCrm.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index(string id)
+        public IActionResult Index(int id)
         { 
-            if (id == "8")
+            if (id == 8)
             {
                 return Forbid();
             }
-            if (id == "5")
+            if (id == 5)
             {
                 return NotFound();
             }
-            var model = new
+            var model = new CustomerModel
             {
-                Id = 1, FirstName = "John", LastName = "Doe", PhoneNumber = ("123-456-7890") 
+                Id = id, FirstName = "John", LastName = "Doe", PhoneNumber = "123-456-7890" 
                 
             };
 
