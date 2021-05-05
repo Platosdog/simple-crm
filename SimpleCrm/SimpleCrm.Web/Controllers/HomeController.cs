@@ -6,13 +6,13 @@ namespace SimpleCrm.Web.Controllers
     public class HomeController : Controller
     {
         public IActionResult Index()
-        { 
-           var model = new CustomerModel
+        {
+            var model = new CustomerModel
             {
-                                
+                FirstName = "Jay", LastName = "Phillips"               
             };
 
-            return View("Home", model);
+            return View(model);
         }
     }
 }
