@@ -6,6 +6,28 @@
     <title>Simple CRM</title>
 </head>
 <body>
-    <h1>@Model.FirstName @Model.LastName</h1>
+    <h1>Customers</h1>
+    <p>
+        welcome to the customers page.
+    </p>
+    <table>
+        <thead>
+        <td>Customer Number</td>
+        <td>Customer First Name</td>
+        <td>Customer Last Name</td>
+        <td>Customer Phone Number</td>
+        </thead>
+        <tbody>
+            @foreach (var Customer in ICustomerData)
+            {
+                <tr>
+                    <td>@Customer.Id</td>
+                    <td>@Customer.FirstName</td>
+                    <td>@Customer.LastName</td>
+                    <td>@Customer.PhoneNumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </body>
 </html>

@@ -5,13 +5,18 @@ namespace SimpleCrm.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private ICustomerData ICustomerData; // (2) a class field to hold the needed dependency
+
+        // (1) the 'constructor' can INJECT data contracts it needs like this
+        public HomeController(ICustomerData customerData)
+        {
+            ICustomerData = customerData; // (3) store the injected dependency into a class field
+        }
+
         public IActionResult Index()
         {
-            var model = new CustomerModel
-            {
-                FirstName = "Jay", LastName = "Phillips"               
-            };
-
+            // (4) now use the dependency...
+            var model = ICustomerData.GetAll();
             return View(model);
         }
     }
