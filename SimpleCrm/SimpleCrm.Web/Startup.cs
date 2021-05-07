@@ -20,7 +20,7 @@ namespace SimpleCrm.Web
         {
             services.AddMvc();
             services.AddSingleton<IGreeter, ConfigurationGreeter>();
-            services.AddSingleton<InMemoryCustomerData>();
+            services.AddSingleton<ICustomerData, InMemoryCustomerData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,4 @@
-﻿@model SimpleCrm.Web.Models.CustomerModel
+﻿@model IEnumerable<SimpleCrm.Customer>
 @{
 }
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -12,19 +12,21 @@
     </p>
     <table>
         <thead>
-        <td>Customer Number</td>
-        <td>Customer First Name</td>
-        <td>Customer Last Name</td>
-        <td>Customer Phone Number</td>
+            <tr>
+                <td>Number</td>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Phone Number</td>
+            </tr>
         </thead>
         <tbody>
-            @foreach (var Customer in ICustomerData)
+            @foreach (var customer in Model)
             {
                 <tr>
-                    <td>@Customer.Id</td>
-                    <td>@Customer.FirstName</td>
-                    <td>@Customer.LastName</td>
-                    <td>@Customer.PhoneNumber</td>
+                    <td>@customer.Id</td>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.PhoneNumber</td>
                 </tr>
             }
         </tbody>
