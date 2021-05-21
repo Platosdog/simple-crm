@@ -8,8 +8,7 @@
 <body>
     <h1>Customers</h1>
     <p>
-        @foreach (var CurrentGreeting in Model.CurrentMessage)
-        {  <t1>@CurrentGreeting</t1> }
+        @Model.CurrentMessage
     </p>
     <table>
         <thead>
@@ -21,15 +20,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var customer in Model.Customers)
-            {
-                <tr>
-                    <td>@customer.Id</td>
-                    <td>@customer.FirstName</td>
-                    <td>@customer.LastName</td>
-                    <td>@customer.PhoneNumber</td>
-                </tr>
-            }
+                           @foreach (var customer in Model.Customers)
+                {
+                    <tr>
+                        <td>@customer.Id</td>
+                        <td>@customer.FirstName</td>
+                        <td>@customer.LastName</td>
+                        <td>@customer.PhoneNumber</td>
+                    </tr>
+                }
         </tbody>
     </table>
 </body>
