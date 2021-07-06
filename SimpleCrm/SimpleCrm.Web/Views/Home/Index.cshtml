@@ -23,7 +23,10 @@
                            @foreach (var customer in Model.Customers)
                 {
                     <tr>
-                        <td>@customer.Id</td>
+                        <td>
+                            <a href="/home/details/@customer.Id">Details</a>
+                            @Html.ActionLink("View", "Details", new { id = customer.Id })
+                        </td>
                         <td>@customer.FirstName</td>
                         <td>@customer.LastName</td>
                         <td>@customer.PhoneNumber</td>
