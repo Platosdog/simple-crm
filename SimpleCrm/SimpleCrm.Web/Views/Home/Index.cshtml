@@ -1,4 +1,5 @@
-﻿@model SimpleCrm.Web.Models.HomePageViewModel
+﻿@using SimpleCrm.Web.Controllers
+@model SimpleCrm.Web.Models.HomePageViewModel
 @{
 }
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -20,18 +21,18 @@
             </tr>
         </thead>
         <tbody>
-                           @foreach (var customer in Model.Customers)
-                {
-                    <tr>
-                        <td>
-                            <a href="/home/details/@customer.Id">Details</a>
-                            @Html.ActionLink("View", "Details", new { id = customer.Id })
-                        </td>
-                        <td>@customer.FirstName</td>
-                        <td>@customer.LastName</td>
-                        <td>@customer.PhoneNumber</td>
-                    </tr>
-                }
+            @foreach (var customer in Model.Customers)
+            {
+                <tr>
+                    <td>
+                        <a href="/home/details/@customer.Id">Details</a>
+                        @Html.ActionLink("View", nameof(HomeController.Details), new { id = customer.Id })
+                    </td>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.PhoneNumber</td>
+                </tr>
+            }
         </tbody>
     </table>
 </body>
