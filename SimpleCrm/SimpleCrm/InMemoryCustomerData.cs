@@ -6,9 +6,9 @@ namespace SimpleCrm
 {
     public class InMemoryCustomerData : ICustomerData
     {
-        IList<Customer> customers;
-
-        public InMemoryCustomerData()
+        static IList<Customer> customers;
+        
+        static InMemoryCustomerData()
         {
             customers = new List<Customer>
                   {
@@ -32,6 +32,12 @@ namespace SimpleCrm
         public IEnumerable<Customer> GetAll()
         {
             return customers;
+        }
+
+        public void Save(Customer customer)
+        {
+            customer.Id = customers.Max(x => x.Id) + 1;
+            throw new NotImplementedException();
         }
     }
 }
