@@ -10,7 +10,7 @@ namespace SimpleCrm.Web.Controllers
         private readonly ICustomerData customerData;
         private readonly IGreeter _greeter;
 
-        public HomeController(ICustomerData customerData, IGreeter greeter) 
+        public HomeController(ICustomerData customerData, IGreeter greeter)
         {
             this.customerData = customerData;
             _greeter = greeter;
@@ -28,7 +28,7 @@ namespace SimpleCrm.Web.Controllers
 
         public IActionResult Index()
         {
-             var model = new HomePageViewModel()
+            var model = new HomePageViewModel()
             {
                 CurrentMessage = _greeter.GetGreeting(),
                 Customers = customerData.GetAll()
@@ -36,19 +36,14 @@ namespace SimpleCrm.Web.Controllers
             return View(model);
         }
 
-        [HttpGet()]   // < -- NEW
+        [HttpGet()]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost()]   // < -- NEW
+        [HttpPost()]
         public IActionResult Create(CustomerEditViewModel model)
-        {
-            return View();
-        }
-
-        public IActionResult Create(Customer model)
         {
             var customer = new Customer
             {
@@ -60,9 +55,7 @@ namespace SimpleCrm.Web.Controllers
             };
             customerData.Save(customer);
 
-            return View("Details", customer);
-
-            throw new NotImplementedException();
+            return RedirectToAction(nameof(Details), new { id = customer.Id });
         }
     }
 }
