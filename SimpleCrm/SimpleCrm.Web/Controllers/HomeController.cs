@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SimpleCrm.Web.Models;
 using SimpleCrm.Web.Models.Home;
-using System;
+using System.Linq;
+using CustomerEditViewModel = SimpleCrm.Web.Models.Home.CustomerEditViewModel;
 
 namespace SimpleCrm.Web.Controllers
 {
@@ -31,7 +32,12 @@ namespace SimpleCrm.Web.Controllers
             var model = new HomePageViewModel()
             {
                 CurrentMessage = _greeter.GetGreeting(),
-                Customers = customerData.GetAll()
+                Customers = customerData.GetAll().Select(x => new CustomerModel {
+                    FirstName= x.FirstName, 
+                    LastName= x.LastName, 
+                    Id= x.Id, 
+                    PhoneNumber= x.PhoneNumber
+                })
             };
             return View(model);
         }
