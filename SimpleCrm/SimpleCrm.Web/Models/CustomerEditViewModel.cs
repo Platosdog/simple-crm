@@ -4,12 +4,12 @@ namespace SimpleCrm.Web.Models.Home
 {
     public class CustomerEditViewModel
     {
-        [Display(Name = "First Name")]
+        
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool OptInNewsletter { get; set; }
+        [Display(Name = "First Name")] [MaxLength(12)] [Required] public string FirstName { get; set; } 
+        [Display(Name = "Last Name")] [MaxLength(20)] [Required] public string LastName { get; set; }
+        [Display(Name = "Phone")] [Required] [MinLength(10)] public string PhoneNumber { get; set; }
+        [Display(Name = "Newsletter ?")] public bool OptInNewsletter { get; set; }
         public CustomerType Type { get; set; }
     }
 }

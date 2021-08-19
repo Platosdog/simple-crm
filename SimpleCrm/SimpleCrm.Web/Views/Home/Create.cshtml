@@ -6,25 +6,29 @@
 
 <h1>Create</h1>
 
+@Html.ValidationSummary()
 @using (Html.BeginForm())
 {
     <div>
         @Html.LabelFor(x => x.FirstName)
-        @Html.TextBoxFor(x => x.FirstName)
+        @Html.EditorFor(x => x.FirstName)
+        @Html.ValidationMessageFor(x => x.FirstName)
     </div>
     <div>
         @Html.LabelFor(x => x.LastName)
-        @Html.TextBoxFor(x => x.LastName)
+        @Html.EditorFor(x => x.LastName)
+        @Html.ValidationMessageFor(x => x.LastName)
     </div>
     <div>
         @Html.LabelFor(x => x.PhoneNumber)
-        @Html.TextBoxFor(x => x.PhoneNumber)
+        @Html.EditorFor(x => x.PhoneNumber)
+        @Html.ValidationMessageFor(x => x.PhoneNumber)
     </div>
     <div>
-       Receive News Letter @Html.CheckBoxFor(x => x.OptInNewsletter)
+        Receive News Letter @Html.CheckBoxFor(x => x.OptInNewsletter)
     </div>
     <div>
-        @Html.DropDownListFor(x => x.Type, Html.GetEnumSelectList(typeof(CustomerType)))
+        Type @Html.DropDownListFor(x => x.Type, Html.GetEnumSelectList(typeof(CustomerType)))
     </div>
     <div>
         <button type="submit">Save</button>
