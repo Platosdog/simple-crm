@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SimpleCrm.SqlDbServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,12 @@ namespace SimpleCrm.Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -20,7 +28,12 @@ namespace SimpleCrm.Web
         {
             services.AddMvc();
             services.AddSingleton<IGreeter, ConfigurationGreeter>();
-            services.AddSingleton<ICustomerData, InMemoryCustomerData>();
+            services.AddSingleton<ICustomerData, SqlCustomerData>();
+
+            services.AddDbContext<SimpleCrmDbContext>(opttions =>
+            {
+                opttions.UseSqlServer(Configuration.GetConnectionString("SimpleCrmConnection"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
