@@ -28,7 +28,7 @@ namespace SimpleCrm.Web
         {
             services.AddMvc();
             services.AddSingleton<IGreeter, ConfigurationGreeter>();
-            services.AddSingleton<ICustomerData, SqlCustomerData>();
+            services.AddScoped<ICustomerData, SqlCustomerData>();
 
             services.AddDbContext<SimpleCrmDbContext>(opttions =>
             {
