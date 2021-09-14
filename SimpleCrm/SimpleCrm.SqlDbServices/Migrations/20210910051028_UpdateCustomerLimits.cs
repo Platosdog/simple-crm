@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace SimpleCrm.SqlDbServices.Migrations
 {

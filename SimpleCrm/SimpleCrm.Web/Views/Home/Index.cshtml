@@ -1,39 +1,38 @@
 ﻿@using SimpleCrm.Web.Controllers
 @model SimpleCrm.Web.Models.HomePageViewModel
 @{
+    ViewBag.Title = "Customers";
+    Layout = "_Layout";
 }
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Simple CRM</title>
-</head>
-<body>
-    <h1>Customers</h1>
+
+<h1>Customers</h1>
+
+<table>
+    <thead>
+        <tr>
+            <td>Number</td>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Phone Number</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr>
+                <td>
+                    <a href="/home/details/@customer.Id">Details</a>
+                    @Html.ActionLink("View", nameof(HomeController.Details), new { id = customer.Id })
+                </td>
+                <td>@customer.FirstName</td>
+                <td>@customer.LastName</td>
+                <td>@customer.PhoneNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Footer{
     <p>
         @Model.CurrentMessage
     </p>
-    <table>
-        <thead>
-            <tr>
-                <td>Number</td>
-                <td>First Name</td>
-                <td>Last Name</td>
-                <td>Phone Number</td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in Model.Customers)
-            {
-                <tr>
-                    <td>
-                        <a href="/home/details/@customer.Id">Details</a>
-                        @Html.ActionLink("View", nameof(HomeController.Details), new { id = customer.Id })
-                    </td>
-                    <td>@customer.FirstName</td>
-                    <td>@customer.LastName</td>
-                    <td>@customer.PhoneNumber</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</body>
-</html>
+}
