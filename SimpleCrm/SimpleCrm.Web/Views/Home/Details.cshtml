@@ -1,7 +1,10 @@
 ﻿@using SimpleCrm.Web.Controllers
 @model SimpleCrm.Customer
 
-    ViewBag.Title = SimpleCrm.Customers.LastName;
+@{ 
+    ViewBag.Title = Model.LastName;
+}
+    
 
     <h1>@Model.LastName</h1>
     <div>
