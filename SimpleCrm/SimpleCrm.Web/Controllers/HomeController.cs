@@ -27,6 +27,20 @@ namespace SimpleCrm.Web.Controllers
             return View(customer);
         }
 
+        [HttpGet()]
+        public IActionResult Edit(int id)
+        {
+            var customer = customerData.Get(id);
+            var model = new CustomerEditViewModel
+            {
+                FirstName= customer.FirstName,
+                LastName= customer.LastName,
+                PhoneNumber= customer.PhoneNumber,
+                OptInNewsletter= customer.OptInNewsletter
+            };
+            return View(model);
+        }
+
         public IActionResult Index()
         {
             var model = new HomePageViewModel()
