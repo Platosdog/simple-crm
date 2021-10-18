@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SimpleCrm
 {
@@ -7,6 +6,7 @@ namespace SimpleCrm
     {
         IEnumerable<Customer> GetAll();
         Customer Get(int id);
-        void Save(Customer customer);
+        void Add(Customer customer);
+        void Update(Customer customer);
     }
 }

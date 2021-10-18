@@ -20,7 +20,8 @@
             <tr>
                 <td>
                     <a asp-action="details" asp-controller="Home" asp-route-id="@customer.Id">Details</a>
-                    
+                    <a asp-action="Edit" asp-route-id="@customer.Id">Edit</a>
+
                     @Html.ActionLink("View", nameof(HomeController.Details), new { id = customer.Id })
                 </td>
                 <td>@customer.FirstName</td>

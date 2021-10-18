@@ -1,2 +1,23 @@
-﻿@{
+﻿@model CustomerEditViewModel
+@{
+    ViewBag.Title = $"Edit {Model.LastName}";
 }
+
+<h1>Edit</h1>
+
+<div>
+    <form method="post" asp-antiforgery="true">
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" />
+        <span asp-validation-for="FirstName"></span>
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName"></span>
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" />
+        <span asp-validation-for="PhoneNumber"></span>
+        Receive News Letter @Html.CheckBoxFor(x => x.OptInNewsletter)
+        <select asp-for="Type" asp-items=" Html.GetEnumSelectList(typeof(CustomerType))">
+        </select>
+    </form>
+</div>

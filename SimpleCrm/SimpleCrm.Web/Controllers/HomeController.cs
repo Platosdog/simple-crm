@@ -40,6 +40,25 @@ namespace SimpleCrm.Web.Controllers
             };
             return View(model);
         }
+        [HttpPost()]
+        [ValidateAntiForgeryToken()]
+        public IActionResult Edit(CustomerEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var customer = new Customer
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    PhoneNumber = model.PhoneNumber,
+                    OptInNewsletter = model.OptInNewsletter,
+                    Type = model.Type
+                };
+                customerData.Save(customer);
+            }
+
+            return View();
+        }
 
         public IActionResult Index()
         {
