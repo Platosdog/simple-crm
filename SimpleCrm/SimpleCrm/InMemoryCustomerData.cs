@@ -40,8 +40,12 @@ namespace SimpleCrm
 
         public void Update(Customer customer)
         {
-            customer.Id = customers.Max(x => x.Id) + 1;
-            customers.Add(customer);
+           customers.Add(customer);
+        }
+
+        public void Save(Customer customer)
+        {
+            
         }
     }
 }
