@@ -46,18 +46,18 @@ namespace SimpleCrm.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var customer = new Customer
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    PhoneNumber = model.PhoneNumber,
-                    OptInNewsletter = model.OptInNewsletter,
-                    Type = model.Type
-                };
-                customerData.Save(customer);
+                var customer = customerData.Get(model.Id);
+
+                customer.FirstName = model.FirstName;
+                customer.LastName = model.LastName; 
+                customer.PhoneNumber = model.PhoneNumber; 
+                customer.OptInNewsletter = model.OptInNewsletter;
+                customer.Type = model.Type;
+              
+                customerData.Update(customer);
             }
 
-            return View();
+            return View(model);
         }
 
         public IActionResult Index()
@@ -95,7 +95,7 @@ namespace SimpleCrm.Web.Controllers
                     OptInNewsletter = model.OptInNewsletter,
                     Type = model.Type
                 };
-                customerData.Save(customer);
+                customerData.Add(customer);
 
                 return RedirectToAction(nameof(Details), new { id = customer.Id });
             }

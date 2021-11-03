@@ -19,8 +19,9 @@
         Receive News Letter @Html.CheckBoxFor(x => x.OptInNewsletter)
         <select asp-for="Type" asp-items=" Html.GetEnumSelectList(typeof(CustomerType))">
         </select>
+        <button type="submit">Update</button>
     </form>
 </div>
 <div>
-    <button type="submit">Save</button>
+    
 </div>

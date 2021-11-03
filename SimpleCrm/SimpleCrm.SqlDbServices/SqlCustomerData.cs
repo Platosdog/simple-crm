@@ -34,11 +34,5 @@ namespace SimpleCrm.SqlDbServices
         {
             simpleCrmDbContext.SaveChanges();
         }
-
-        public void Save(Customer customer)
-        {
-            simpleCrmDbContext.SaveChanges();
-        }
-
     }
 }
