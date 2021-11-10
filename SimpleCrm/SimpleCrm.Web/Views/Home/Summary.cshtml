@@ -1,18 +1,15 @@
-﻿@model Customer
-{
-<html>
-<head>
-    <title>Summary</title>
-</head>
-<body>
-    <div>
-        <h1>Customers</h1>
+﻿@model CustomerModel
+
 
         <section>
-            <h2>@Model.FirstName</h2>
+            <h2>
+                @Model.FirstName, @Model.LastName
+            </h2>
+            <h3>
+                <a asp-action="details" asp-controller="Home" asp-route-id="customer.Id">Details</a>
+                <a asp-action="Edit" asp-route-id="customer.Id">Edit</a>
+            </h3>
         </section>
-    </div>
-</body>
-</html>
-}
+
+
 
