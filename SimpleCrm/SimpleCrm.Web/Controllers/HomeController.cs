@@ -9,12 +9,11 @@ namespace SimpleCrm.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ICustomerData customerData;
-        private readonly IGreeter _greeter;
+        
 
-        public HomeController(ICustomerData customerData, IGreeter greeter)
+        public HomeController(ICustomerData customerData)
         {
             this.customerData = customerData;
-            _greeter = greeter;
         }
 
         public IActionResult Details(int id)
@@ -64,7 +63,7 @@ namespace SimpleCrm.Web.Controllers
         {
             var model = new HomePageViewModel()
             {
-                CurrentMessage = _greeter.GetGreeting(),
+                
                 Customers = customerData.GetAll().Select(x => new CustomerModel {
                     FirstName= x.FirstName, 
                     LastName= x.LastName, 
