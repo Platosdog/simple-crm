@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SimpleCrm.Web.Models;
 using SimpleCrm.Web.Models.Home;
 using System.Linq;
@@ -6,6 +7,7 @@ using CustomerEditViewModel = SimpleCrm.Web.Models.Home.CustomerEditViewModel;
 
 namespace SimpleCrm.Web.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ICustomerData customerData;
@@ -58,7 +60,7 @@ namespace SimpleCrm.Web.Controllers
 
             return View(model);
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var model = new HomePageViewModel()
