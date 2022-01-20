@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCrm.Web.Models;
+using SimpleCrm.Web.Models.Account;
 using SimpleCrm.Web.Models.Home;
 using System.Linq;
 using CustomerEditViewModel = SimpleCrm.Web.Models.Home.CustomerEditViewModel;
@@ -101,6 +102,21 @@ namespace SimpleCrm.Web.Controllers
                 return RedirectToAction(nameof(Details), new { id = customer.Id });
             }
             return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Register(RegisterUserViewModel model)
+        {
+            var register = new RegisterUserViewModel
+            {
+                DisplayName = model.DisplayName,
+                UserName = model.UserName,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword
+
+            };
+            return View(model);
+
         }
     }
 }
