@@ -21,6 +21,10 @@ namespace SimpleCrm.Web.Controllers
             this.userManager = userManager;
         }
         private readonly SignInManager<CrmUser> signInManager;
+        public AccountController(SignInManager<CrmUser> signInManager)
+        {
+            this.signInManager = signInManager;
+        }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterUserViewModel model)
