@@ -1,4 +1,5 @@
-﻿@Model HomePageViewModel
+﻿@using SimpleCrm.Web.Models 
+@model HomePageViewModel
 @{
     ViewBag.Title = "Customers";
 }
@@ -17,7 +18,10 @@
     <tbody>
         @foreach (var customer in Model.Customers)
         {
-            <partial name="Summary" model="customer" />
+           
+                    <partial name="Summary" model="customer" />
+              
+           
         }
     </tbody>
 </table>

@@ -10,20 +10,23 @@ namespace SimpleCrm.Web.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly UserManager<CrmUser> userManager;
+        private readonly SignInManager<CrmUser> signInManager;
+
+        public string UserName { get; private set; }
+        public string DisplayName { get; private set; }
+        public string Email { get; private set; }
+
+        public AccountController(UserManager<CrmUser> userManager, SignInManager<CrmUser> signInManager)
+        {
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
             return View();
-        }
-        private readonly UserManager<CrmUser> userManager;
-        public AccountController(UserManager<CrmUser> userManager)
-        {  
-            this.userManager = userManager;
-        }
-        private readonly SignInManager<CrmUser> signInManager;
-        public AccountController(SignInManager<CrmUser> signInManager)
-        {
-            this.signInManager = signInManager;
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -47,9 +50,44 @@ namespace SimpleCrm.Web.Controllers
                 {
                     ModelState.AddModelError("", result.Description);
                 }
-                return NoContent(); 
             }
             return View();
         }
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var loginResult = await signInManager.PasswordSignInAsync(
+                  model.UserName, model.Password, model.RememberMe, false);
+                if (loginResult.Succeeded)
+                {
+                    if (Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                ModelState.AddModelError("", "Could not login");
+            }
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

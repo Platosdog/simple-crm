@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SimpleCrm.Web.Models.Account
 {
-    public class RegisterUserViewModel
+    public class LoginUserViewModel
     {
-        [Required, MaxLength(50), DisplayName("Email Address")]
+        [Required, MaxLength(256), DisplayName("Email Address")]
         public string UserName { get; set; }
 
         [DisplayName("Name")]
@@ -20,6 +20,5 @@ namespace SimpleCrm.Web.Models.Account
 
         [Compare("Password", ErrorMessage = "Incorrect Password")]
         public string ConfirmPassword { get; set; }
-
     }
 }
