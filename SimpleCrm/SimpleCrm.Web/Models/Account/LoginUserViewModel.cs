@@ -21,5 +21,6 @@ namespace SimpleCrm.Web.Models.Account
         [Compare("Password", ErrorMessage = "Incorrect Password")]
         public string ConfirmPassword { get; set; }
         public bool RememberMe { get; internal set; }
+        public string ReturnUrl { get; internal set; }
     }
 }

@@ -13,10 +13,6 @@ namespace SimpleCrm.Web.Controllers
         private readonly UserManager<CrmUser> userManager;
         private readonly SignInManager<CrmUser> signInManager;
 
-        public string UserName { get; private set; }
-        public string DisplayName { get; private set; }
-        public string Email { get; private set; }
-
         public AccountController(UserManager<CrmUser> userManager, SignInManager<CrmUser> signInManager)
         {
             this.userManager = userManager;
@@ -68,9 +64,9 @@ namespace SimpleCrm.Web.Controllers
                   model.UserName, model.Password, model.RememberMe, false);
                 if (loginResult.Succeeded)
                 {
-                    if (Url.IsLocalUrl(model.DisplayName))
+                    if (Url.IsLocalUrl(model.ReturnUrl))
                     {
-                        return Redirect(model.DisplayName);
+                        return Redirect(model.ReturnUrl);
                     }
                     else
                     {
