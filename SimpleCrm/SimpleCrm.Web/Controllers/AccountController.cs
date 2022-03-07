@@ -68,9 +68,9 @@ namespace SimpleCrm.Web.Controllers
                   model.UserName, model.Password, model.RememberMe, false);
                 if (loginResult.Succeeded)
                 {
-                    if (Url.IsLocalUrl(model.ReturnUrl))
+                    if (Url.IsLocalUrl(model.DisplayName))
                     {
-                        return Redirect(model.ReturnUrl);
+                        return Redirect(model.DisplayName);
                     }
                     else
                     {
