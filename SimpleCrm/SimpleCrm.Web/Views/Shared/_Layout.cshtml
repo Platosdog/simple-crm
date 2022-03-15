@@ -8,16 +8,43 @@
     <link rel="stylesheet" href="/js/vendor.min.js">
 </head>
 <body>
-    <div>
-        @await Component.InvokeAsync("LoginLogout")
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">Simple CRM</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="/">Customers</a>
+                    <a class="mdl-navigation__link" asp-action="Create" asp-controller="Home">Create</a>
+                    @await Component.InvokeAsync("LoginLogout")
+                </nav>
+            </div>
+            <div class="mdl-layout__header-row">
+                <div class="mdl-layout__drawer">
+                    <span class="mdl-layout-title">Simple CRM</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <nav class="mdl-navigation mdl-layout--large-screen-only">
+                        <a class="mdl-navigation__link" href="/">Customers</a>
+                        <a class="mdl-navigation__link" asp-action="Create" asp-controller="Home">Create</a>
+                        @await Component.InvokeAsync("LoginLogout")
+                    </nav>
+                </div>
+            </div>
+        </header>
     </div>
     <div>
         @RenderBody()
     </div>
-    <footer>
-        @await Component.InvokeAsync("Greeting")
-        @RenderSection("Footer", required: false)
-        &copy; @DateTime.Now.Year  SimpleCrm Sample Corp.
+    <footer class="mdl-mini-footer">
+        <div class="mdl-mini-footer__left-section">
+            @await Component.InvokeAsync("Greeting")
+        </div>
+        <div class="mdl-mini-footer__right-section">
+            <ul class="mdl-mini-footer__link-list">
+                <li><a href="#">&copy; @DateTime.Now.Year</a></li>
+                <li><a href="#">SimpleCrm Sample Corp.</a></li>
+                @RenderSection("footer", required: false)
+            </ul>
+        </div>
     </footer>
 </body>
 </html>
