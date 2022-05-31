@@ -8,5 +8,5 @@ export interface Customer {
   emailAddress: string;
   preferredContactMethod: InteractionMethod;
   statusCode: string;
-  lastContactDate: string; 
+  lastContactDate: string;
 }
