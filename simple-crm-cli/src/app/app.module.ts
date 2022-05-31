@@ -21,7 +21,8 @@ import { CustomerModule } from './customer/customer.module';
     MatToolbarModule,
     MatIconModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    CustomerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
