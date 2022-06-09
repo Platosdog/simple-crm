@@ -6,6 +6,7 @@ import { CustomerListPageComponent } from './customer-list-page/customer-list-pa
 
 import {MatTableModule} from '@angular/material/table';
 import {MatCardModule} from '@angular/material/card';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {MatCardModule} from '@angular/material/card';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     CustomerRoutingModule,
     MatTableModule,
     MatCardModule
