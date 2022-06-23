@@ -37,6 +37,7 @@ export class CustomerMockService extends CustomerService {
         lastContactDate: new Date().toISOString()
       }];
     }
+
     }
 
     override search(term: string): Observable<Customer[]> {

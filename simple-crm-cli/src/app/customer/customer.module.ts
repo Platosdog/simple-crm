@@ -7,6 +7,9 @@ import { CustomerListPageComponent } from './customer-list-page/customer-list-pa
 import {MatTableModule} from '@angular/material/table';
 import {MatCardModule} from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
+import { CustomerService } from './customer.service';
+import { Observable } from 'rxjs';
+import { Customer } from './customer.model';
 
 
 @NgModule({
@@ -18,7 +21,10 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     CustomerRoutingModule,
     MatTableModule,
-    MatCardModule
+    MatCardModule,
+  ],
+  providers: [
+    CustomerService
   ]
+
 })
-export class CustomerModule { }
