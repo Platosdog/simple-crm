@@ -11,6 +11,7 @@ export class CustomerMockService extends CustomerService {
 
   constructor(http: HttpClient) {
     super(http);
+    console.warn('Warning: You are using the CustomerMockService, not intended for production use.');
     const localCustomers = localStorage.getItem('customers');
     if (localCustomers) {
        this.customers = JSON.parse(localCustomers);
@@ -41,7 +42,9 @@ export class CustomerMockService extends CustomerService {
     }
 
     override search(term: string): Observable<Customer[]> {
-      const results = this.customers.filter(c => (c.firstName.indexOf(term) > 0 ||
+      const results = this.customers.filter(c =>
+      term == '' ||
+      (c.firstName.indexOf(term) > 0 ||
       c.lastName.indexOf(term) > 0 ||
       c.phoneNumber.indexOf(term) > 0 ||
       c.emailAddress.indexOf(term) > 0) ||

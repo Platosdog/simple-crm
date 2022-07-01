@@ -9,6 +9,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { CustomerModule } from './customer/customer.module';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { CustomerModule } from './customer/customer.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
+    MatButtonModule,
     MatIconModule,
     MatSidenavModule,
     MatListModule,

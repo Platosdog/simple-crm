@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CustomerService } from './customer.service';
 import { Observable } from 'rxjs';
 import { Customer } from './customer.model';
+import { CustomerMockService } from './customer-mock.service';
 
 
 @NgModule({
@@ -24,7 +25,10 @@ import { Customer } from './customer.model';
     MatCardModule,
   ],
   providers: [
-    CustomerService
+    {
+      provide: CustomerService,
+      useClass: CustomerMockService
+    }
   ]
-
 })
+export class CustomerModule { }

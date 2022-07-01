@@ -12,7 +12,6 @@ import { CustomerService } from '../customer.service';
 export class CustomerListPageComponent implements OnInit {
   customers$!: Observable<Customer[]>;
 
-  dataSource!: MatTableDataSource<Customer>;
   displayColumns = ['name', 'phoneNumber', 'emailAddress', 'status'];
 
   constructor(private customerService: CustomerService) {

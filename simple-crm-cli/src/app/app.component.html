@@ -1,7 +1,3 @@
-<mat-toolbar color="primary">
-  {{title}}
-</mat-toolbar>
-
 <div style="height:100vh; display:flex; flex-direction:column;">
   <mat-toolbar color="primary">
     <button mat-icon-button matRipple (click)="sidenav.toggle()">
@@ -25,7 +21,6 @@
       </mat-nav-list>
     </mat-sidenav>
     <router-outlet></router-outlet>
-    <button (click)="sidenav.toggle()">Toggle</button>
   </mat-sidenav-container>
   <div class="footer">
     Footer
