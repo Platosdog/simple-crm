@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Customer } from '../customer.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { CustomerService } from '../customer.service';
+import { Router } from '@angular/router';
+import { CustomerCreateDialogComponent } from '../customer-create-dialog/customer-create-dialog.component';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'crm-customer-list-page',
@@ -14,10 +17,20 @@ export class CustomerListPageComponent implements OnInit {
 
   displayColumns = ['name', 'phoneNumber', 'emailAddress', 'status'];
 
-  constructor(private customerService: CustomerService) {
+  constructor(
+    private customerService: CustomerService,
+    private router: Router,
+    public dialog: MatDialog,
+    ) {
     this.customers$ = this.customerService.search('');
   }
 
   ngOnInit(): void { }
 
+  addCustomer(): void {
+    const dialogRef = this.dialog.open(CustomerCreateDialogComponent, {
+      width: '250px',
+      data: null
+    });
+  }
 }

@@ -14,12 +14,13 @@ import { CustomerMockService } from './customer-mock.service';
 import {MatIconModule} from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-
+import { CustomerCreateDialogComponent } from './customer-create-dialog/customer-create-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
-    CustomerListPageComponent
+    CustomerListPageComponent,
+    CustomerCreateDialogComponent
   ],
   imports: [
     CommonModule,
@@ -29,8 +30,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    FlexLayoutModule
-  ],
+    FlexLayoutModule,
+    MatDialogModule,
+
+    ],
   providers: [
     {
       provide: CustomerService,
