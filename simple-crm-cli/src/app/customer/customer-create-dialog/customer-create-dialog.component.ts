@@ -14,6 +14,12 @@ export class CustomerCreateDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: Customer | null,
   ) { }
 
+  save() {
+    const customer = {};
+    this.dialogRef.close(customer);
+  }
+  cancel() { this.dialogRef.close() }
+
   ngOnInit(): void {
   }
 
