@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { CustomerService } from '../customer.service';
 import { Router } from '@angular/router';
 import { CustomerCreateDialogComponent } from '../customer-create-dialog/customer-create-dialog.component';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'crm-customer-list-page',
@@ -30,6 +30,7 @@ export class CustomerListPageComponent implements OnInit {
   addCustomer(): void {
     const dialogRef = this.dialog.open(CustomerCreateDialogComponent, {
       width: '250px',
+      disableClose: true,
       data: null
     });
   }
