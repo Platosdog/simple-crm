@@ -17,6 +17,12 @@
       <mat-error *ngIf="!emailAddress.value">Email Address is Required</mat-error>
       <mat-error *ngIf="emailAddress.value && !emailAddress.value">Invalid Email</mat-error>
     </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Preferred Contact Method" formControlName="preferredContactMethod" name="preferredContactMethod">
+        <mat-option value="Email">Email</mat-option>
+        <mat-option value="Phone">Phone</mat-option>
+      </mat-select>
+    </mat-form-field>
   </form>
   <p>
     customer-create-dialog-works
