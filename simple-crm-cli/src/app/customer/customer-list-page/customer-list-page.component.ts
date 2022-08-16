@@ -15,7 +15,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 export class CustomerListPageComponent implements OnInit {
   customers$!: Observable<Customer[]>;
 
-  displayColumns = ['name', 'phoneNumber', 'emailAddress', 'status'];
+  displayColumns = ['name', 'phoneNumber', 'emailAddress', 'status', 'edit'];
 
   constructor(
     private customerService: CustomerService,
@@ -26,6 +26,11 @@ export class CustomerListPageComponent implements OnInit {
   }
 
   ngOnInit(): void { }
+  openDetail(item: Customer): void {
+    if(item) {
+      this.router.navigate([`./customer/${item.customerId}`])
+    }
+  }
 
   addCustomer(): void {
     const dialogRef = this.dialog.open(CustomerCreateDialogComponent, {
