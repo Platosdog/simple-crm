@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../customer.service';
+import { Customer } from '../customer.model';
 
 @Component({
   selector: 'crm-customer-detail',
@@ -9,7 +10,6 @@ import { CustomerService } from '../customer.service';
   styleUrls: ['./customer-detail.component.scss']
 })
 export class CustomerDetailComponent implements OnInit {
-  customerId!: number;
 
   constructor(
     private fb: FormBuilder,
@@ -17,8 +17,19 @@ export class CustomerDetailComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
-    this.customerId = parseInt(this.route.snapshot.params['id'], 10)
-  }
+    customerId!: number;
+    customer!: Customer;
 
-}
+    ngOnInit(): void {
+
+       this.customerId = +this.route.snapshot.params['id'];
+
+       this.customerService
+          .get(this.customerId)
+          .subscribe(cust => {
+             if (cust) {
+               this.customer = cust;
+             }
+          });
+        }
+      }

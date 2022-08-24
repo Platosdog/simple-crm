@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Customer } from './customer.model';
 
 
@@ -17,10 +17,13 @@ export class CustomerService {
 
   insert(customer: Customer): Observable<Customer> {
     return this.http.post<Customer>('/api/customer/save', customer);
- }
+  }
 
- update(customer: Customer): Observable<Customer> {
-  
-  return this.http.put<Customer>(`/api/customer/${customer.customerId}`, customer);
-}
+  update(customer: Customer): Observable<Customer> {
+
+    return this.http.put<Customer>(`/api/customer/${customer.customerId}`, customer);
+  }
+  get(customerId: number): Observable<Customer | undefined> {
+    return this.http.get<Customer>('/api/customer/' + customerId);
+  }
 }
