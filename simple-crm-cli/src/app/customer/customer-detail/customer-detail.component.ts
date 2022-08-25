@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../customer.service';
 import { Customer } from '../customer.model';
@@ -10,15 +10,27 @@ import { Customer } from '../customer.model';
   styleUrls: ['./customer-detail.component.scss']
 })
 export class CustomerDetailComponent implements OnInit {
+  customerId!: number;
+  customer!: Customer;
+  detailForm: FormGroup | undefined;
 
   constructor(
     private fb: FormBuilder,
     private customerService: CustomerService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    this.createForm();
+  }
 
-    customerId!: number;
-    customer!: Customer;
+  createForm(): void {
+    this.detailForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phoneNumber: [''],
+      emailAddress: ['', [Validators.required, Validators.email]],
+      preferredContactMethod: ['email']
+    });
+  }
 
     ngOnInit(): void {
 
