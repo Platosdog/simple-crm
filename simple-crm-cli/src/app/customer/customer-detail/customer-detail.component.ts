@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../customer.service';
 import { Customer } from '../customer.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'crm-customer-detail',
@@ -12,17 +13,14 @@ import { Customer } from '../customer.model';
 export class CustomerDetailComponent implements OnInit {
   customerId!: number;
   customer!: Customer;
-  detailForm: FormGroup | undefined;
+  detailForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private customerService: CustomerService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) {
-    this.createForm();
-  }
-
-  createForm(): void {
     this.detailForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -32,16 +30,25 @@ export class CustomerDetailComponent implements OnInit {
     });
   }
 
-    ngOnInit(): void {
 
-       this.customerId = +this.route.snapshot.params['id'];
+  ngOnInit(): void {
 
-       this.customerService
-          .get(this.customerId)
-          .subscribe(cust => {
-             if (cust) {
-               this.customer = cust;
-             }
-          });
-        }
+    this.customerId = +this.route.snapshot.params['id'];
+
+    this.customerService.get(this.customerId).subscribe(cust => {
+      if (cust) {
+        this.customer = cust;
+        this.detailForm.patchValue(cust);
       }
+    });
+
+  }
+  public save(): void {
+    if (!this.detailForm.valid) return;
+    const customer = { ...this.customer, ...this.detailForm.value };
+    this.customerService.update(customer);
+    this.snackBar.open('Customer Saved', 'OK');
+  }
+
+  public cancel(): void{}
+}

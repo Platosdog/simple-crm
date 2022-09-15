@@ -60,9 +60,9 @@ export class CustomerMockService extends CustomerService {
   }
 
   override update(customer: Customer): Observable<Customer> {
-    const foundCustomer = this.customers.filter(c => c.customerId === c.customerId);
+    const foundCustomer = this.customers.find(c => c.customerId === customer.customerId);
     if (foundCustomer) {
-      this.customers = this.customers.map(c => c.customerId === c.customerId ? customer : c);
+      this.customers = this.customers.map(c => c.customerId === customer.customerId ? customer : c);
     } else {
       this.customers = [...this.customers, customer];
     }
