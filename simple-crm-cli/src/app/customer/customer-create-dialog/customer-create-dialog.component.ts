@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Customer } from '../customer.model';
+import { CustomerService } from '../customer.service';
 
 @Component({
   selector: 'crm-customer-create-dialog',
@@ -14,6 +15,7 @@ export class CustomerCreateDialogComponent implements OnInit {
   constructor(
     private fbr: FormBuilder,
     public dialogRef: MatDialogRef<CustomerCreateDialogComponent>,
+    public customerService: CustomerService,
     @Inject(MAT_DIALOG_DATA) public data: Customer | null,
   ) {
     this.detailForm = this.fbr.group({
@@ -31,7 +33,13 @@ export class CustomerCreateDialogComponent implements OnInit {
   save() {
     if (!this.detailForm.valid) return;
     const customer = {...this.data, ...this.detailForm.value};
-    this.dialogRef.close(customer);
+    this.customerService.insert(customer).subscribe({
+      next:(cust) => {
+        this.dialogRef.close();
+      }
+    });
+
+
   }
   cancel() { this.dialogRef.close() }
 
