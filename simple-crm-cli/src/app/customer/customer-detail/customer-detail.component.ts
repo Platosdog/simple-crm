@@ -46,8 +46,12 @@ export class CustomerDetailComponent implements OnInit {
   public save(): void {
     if (!this.detailForm.valid) return;
     const customer = { ...this.customer, ...this.detailForm.value };
-    this.customerService.update(customer);
-    this.snackBar.open('Customer Saved', 'OK');
+    this.customerService.update(customer).subscribe({
+      next:(cust) => {
+      this.snackBar.open('Customer Saved', 'OK');
+      }
+    })
+
   }
 
   public cancel(): void{}
