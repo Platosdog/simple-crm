@@ -26,7 +26,8 @@ export class CustomerDetailComponent implements OnInit {
       lastName: ['', Validators.required],
       phoneNumber: [''],
       emailAddress: ['', [Validators.required, Validators.email]],
-      preferredContactMethod: ['email']
+      preferredContactMethod: ['email'],
+      statusCode: ['']
     });
   }
 

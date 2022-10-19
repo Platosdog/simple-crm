@@ -1,4 +1,5 @@
 export type InteractionMethod = 'phone' | 'email';
+export type StatusCode = 'checkout' | 'cancel' | 'full' ;
 
 export interface Customer {
   customerId: number;
@@ -7,6 +8,6 @@ export interface Customer {
   phoneNumber: string;
   emailAddress: string;
   preferredContactMethod: InteractionMethod;
-  statusCode: string;
+  statusCode: StatusCode;
   lastContactDate: string;
 }

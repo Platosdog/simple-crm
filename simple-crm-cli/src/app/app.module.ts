@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,6 +9,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { CustomerModule } from './customer/customer.module';
 import { MatButtonModule } from '@angular/material/button';
+import { AppIconsService } from './app-icons.service';
 
 
 @NgModule({
@@ -25,9 +25,11 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    CustomerModule
+    CustomerModule,
   ],
-  providers: [],
+  providers: [AppIconsService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(iconService: AppIconsService) {}
+ }

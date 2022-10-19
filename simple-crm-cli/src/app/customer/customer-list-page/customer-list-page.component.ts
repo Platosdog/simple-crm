@@ -15,7 +15,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 export class CustomerListPageComponent implements OnInit {
   customers$!: Observable<Customer[]>;
 
-  displayColumns = ['name', 'phoneNumber', 'emailAddress', 'status', 'edit', 'lastContactDate'];
+  displayColumns = [ 'icon', 'name', 'phoneNumber', 'emailAddress', 'status', 'edit', 'lastContactDate' ];
+row: any;
 
   constructor(
     private customerService: CustomerService,

@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { CustomerRoutingModule } from './customer-routing.module';
 import { CustomerListPageComponent } from './customer-list-page/customer-list-page.component';
-
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,12 +19,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { CustomerDetailComponent } from './customer-detail/customer-detail.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { StatusIconPipe } from './status-icon.pipe';
 
 @NgModule({
   declarations: [
     CustomerListPageComponent,
     CustomerCreateDialogComponent,
-    CustomerDetailComponent
+    CustomerDetailComponent,
+    StatusIconPipe
   ],
   imports: [
     CommonModule,
