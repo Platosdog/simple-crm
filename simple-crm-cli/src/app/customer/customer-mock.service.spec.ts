@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { CustomerMockService } from './customer-mock.service';
 
 describe('CustomerMockService', () => {

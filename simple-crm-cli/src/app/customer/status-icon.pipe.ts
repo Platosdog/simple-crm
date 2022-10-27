@@ -5,17 +5,21 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class StatusIconPipe implements PipeTransform {
 
-  transform(value: unknown, ...args: unknown[]): string {
+  transform(value: string|undefined|null, ...args: unknown[]): string {
+    if (!value) {
+      return 'checkout';
+    }
     if (value === 'checkout') {
       return 'checkout';
     }
-    if (value === 'cancel') {
+    if (value.search(/prospect/i) === 0) {
       return 'cancel';
     }
-    if (value === 'ordered') {
+    if (value.search(/ordered/i) === 0) {
       return 'full';
     } else {
       return 'checkout';
     }
   }
 }
+
