@@ -3,7 +3,7 @@
     <button mat-icon-button matRipple (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
     </button>
-    Simple CRM
+    <span class="title">{{title}}</span>
   </mat-toolbar>
   <mat-sidenav-container style="flex:1 100%">
     <mat-sidenav #sidenav [opened]="true" [mode]="'side'">
@@ -13,7 +13,7 @@
           <mat-icon matListIcon>home</mat-icon>
           <h4 matLine>Customers</h4>
         </a>
-        <a mat-list-item matRipple [style.position]="'relative'"
+        <a class="chatlist" mat-list-item matRipple [style.position]="'relative'"
           routerLinkActive="selected" [routerLink]="['.']">
           <mat-icon matListIcon>chat</mat-icon>
           <h4 matLine>Pipeline</h4>
