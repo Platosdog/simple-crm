@@ -10,7 +10,7 @@ import { RouterLinkActive } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
