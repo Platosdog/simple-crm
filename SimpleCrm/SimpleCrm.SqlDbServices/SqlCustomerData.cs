@@ -27,12 +27,16 @@ namespace SimpleCrm.SqlDbServices
         public void Add(Customer customer)
         {
             simpleCrmDbContext.Add(customer);
-            simpleCrmDbContext.SaveChanges();
         }
 
         public void Update(Customer customer)
         {
-            simpleCrmDbContext.SaveChanges();
+           
+        }
+
+        public void Commit()
+        {
+            throw new NotImplementedException();
         }
     }
 }

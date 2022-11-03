@@ -41,7 +41,10 @@ namespace SimpleCrm
         {
             customers.Add(customer);
         }
+        public void Commit()
+        {
 
+        }
 
     }
 }

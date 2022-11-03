@@ -56,7 +56,7 @@ namespace SimpleCrm.Web.Controllers
                 customer.OptInNewsletter = model.OptInNewsletter;
                 customer.Type = model.Type;
               
-                customerData.Update(customer);
+                customerData.Commit();
             }
 
             return View(model);
@@ -97,7 +97,7 @@ namespace SimpleCrm.Web.Controllers
                     OptInNewsletter = model.OptInNewsletter,
                     Type = model.Type
                 };
-                customerData.Add(customer);
+                customerData.Commit();
 
                 return RedirectToAction(nameof(Details), new { id = customer.Id });
             }
