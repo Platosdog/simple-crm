@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleCrm.SqlDbServices;
 
 namespace SimpleCrm.SqlDbServices.Migrations
 {
     [DbContext(typeof(SimpleCrmDbContext))]
-    partial class SimpleCrmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221104001233_UpdateCustomer")]
+    partial class UpdateCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
