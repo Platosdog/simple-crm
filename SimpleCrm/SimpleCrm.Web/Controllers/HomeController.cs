@@ -71,7 +71,7 @@ namespace SimpleCrm.Web.Controllers
                     FirstName= x.FirstName, 
                     LastName= x.LastName, 
                     Id= x.Id, 
-                    PhoneNumber= x.PhoneNumber
+                    PhoneNumber= x.PhoneNumber,
                 })
             };
             return View(model);

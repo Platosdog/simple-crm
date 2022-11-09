@@ -9,8 +9,8 @@ using SimpleCrm.SqlDbServices;
 namespace SimpleCrm.SqlDbServices.Migrations
 {
     [DbContext(typeof(SimpleCrmDbContext))]
-    [Migration("20221104001233_UpdateCustomer")]
-    partial class UpdateCustomer
+    [Migration("20221109144812_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

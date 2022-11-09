@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{CCA7CF
 		global.json = global.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCrm.WebApi", "SimpleCrm.WebApi\SimpleCrm.WebApi.csproj", "{39AF6FE9-0BBB-4B89-BED2-63BFB172BE3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{059F98C7-DADF-467E-9C33-D23540759A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{059F98C7-DADF-467E-9C33-D23540759A14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{059F98C7-DADF-467E-9C33-D23540759A14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AF6FE9-0BBB-4B89-BED2-63BFB172BE3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AF6FE9-0BBB-4B89-BED2-63BFB172BE3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AF6FE9-0BBB-4B89-BED2-63BFB172BE3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AF6FE9-0BBB-4B89-BED2-63BFB172BE3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

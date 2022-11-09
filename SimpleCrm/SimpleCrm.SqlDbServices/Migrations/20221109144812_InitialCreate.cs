@@ -10,13 +10,16 @@ namespace SimpleCrm.SqlDbServices.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    OptInNewsletter = table.Column<bool>(type: "bit", nullable: false)
+                    FirstName = table.Column<string>(maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 12, nullable: true),
+                    OptInNewsletter = table.Column<bool>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    EmailAddress = table.Column<string>(nullable: false),
+                    PeferredContactMethod = table.Column<int>(nullable: false),
+                    StatusCode = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
