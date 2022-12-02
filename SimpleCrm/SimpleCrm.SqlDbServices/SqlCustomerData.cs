@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace SimpleCrm.SqlDbServices
 {
@@ -31,22 +32,49 @@ namespace SimpleCrm.SqlDbServices
 
         public void Update(Customer customer)
         {
-           
+            simpleCrmDbContext.SaveChanges();
         }
 
         public void Commit()
         {
-            throw new NotImplementedException();
+            simpleCrmDbContext.SaveChanges();
         }
 
         public List<Customer> GetByStatus(CustomerStatus status, int pageIndex, int take, string orderBy)
         {
-            throw new NotImplementedException();
+            var allowedFields = new string[] { "firstname", "lastname", "phonenumber", "optinnewsletter", "type", "emailaddress", "preferredcontactmethod", "ststuscode" };
+            //validate the orderby,array of strings column names need to be declared if not throw exception
+            string[] expressions = orderBy.Split(',');
+            foreach (var expression in expressions)
+            { //expresion like lastName DESC
+                var propertyDirectionArr = expression.Split(' ');
+            }
+            var query = simpleCrmDbContext.Customers
+                .Where(x => x.Status == status);
+            if (!string.IsNullOrWhiteSpace(orderBy))
+            {
+                query = query.OrderBy(orderBy);
+            }
+            if (expressions.Length != 2)
+            {
+                throw new System.Exception("invalid search");
+            }
+            return query.Skip(pageIndex * take)
+              .Take(take)
+              .ToList();
+
         }
 
-        public void Delete(int customerId)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var cust = new Customer { Id = id };
+            simpleCrmDbContext.Attach(cust);
+            simpleCrmDbContext.Remove(cust);
         }
+        public void Delete(Customer item)
+        {
+            simpleCrmDbContext.Remove(item);
+        }
+
     }
 }

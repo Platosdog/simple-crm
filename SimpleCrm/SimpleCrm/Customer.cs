@@ -22,6 +22,7 @@ namespace SimpleCrm
         public string EmailAddress { get; set; }
         public InteractionMethod PeferredContactMethod { get; set; }
         public CustomerStatus StatusCode { get; set; }
+        public CustomerStatus Status { get; set; }
     }
     public enum InteractionMethod
     {
