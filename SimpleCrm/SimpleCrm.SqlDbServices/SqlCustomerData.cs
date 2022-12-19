@@ -9,6 +9,7 @@ namespace SimpleCrm.SqlDbServices
     public class SqlCustomerData : ICustomerData
     {
         private readonly SimpleCrmDbContext simpleCrmDbContext;
+        private readonly CustomerStatus status;
 
         public SqlCustomerData(SimpleCrmDbContext simpleCrmDbContext)
         {
@@ -40,7 +41,7 @@ namespace SimpleCrm.SqlDbServices
             simpleCrmDbContext.SaveChanges();
         }
 
-        public List<Customer> GetByStatus(CustomerStatus status, int pageIndex, int take, string orderBy)
+        public List<Customer> GetAll(int pageIndex, int take, string orderBy)
         {
             var allowedFields = new string[] { "firstname", "lastname", "phonenumber", "optinnewsletter", "type", "emailaddress", "preferredcontactmethod", "ststuscode" };
             //validate the orderby,array of strings column names need to be declared if not throw exception
@@ -76,5 +77,14 @@ namespace SimpleCrm.SqlDbServices
             simpleCrmDbContext.Remove(item);
         }
 
+        public IEnumerable<Customer> GetAll(int v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

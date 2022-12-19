@@ -46,12 +46,22 @@ namespace SimpleCrm
 
         }
 
-        public List<Customer> GetByStatus(CustomerStatus status, int pageIndex, int take, string orderBy)
+        public List<Customer> GetAll(int pageIndex, int take, string orderBy)
         {
             throw new NotImplementedException();
         }
 
         public void Delete(int customerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Customer> GetAll(int v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete()
         {
             throw new NotImplementedException();
         }
