@@ -58,7 +58,16 @@ namespace SimpleCrm.SqlDbServices
             }
             if (expressions.Length != 2)
             {
-                throw new System.Exception("invalid search");
+                throw new System.Exception("invalid search"); 
+            }
+            if (expressions[1] != "ASC" || expressions[1] != "DESC")
+            {
+                throw new System.Exception("Invalid sort function");
+            }
+
+            if (!allowedFields.Contains(orderBy))
+            {
+                throw new System.Exception("Invalid sort fields");
             }
             return query.Skip(pageIndex * take)
               .Take(take)
