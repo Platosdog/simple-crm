@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SimpleCrm.WebApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleCrm.WebApi.ApiControllers
 {
@@ -19,8 +21,20 @@ namespace SimpleCrm.WebApi.ApiControllers
         public IActionResult GetAll()
         {
             var customers = _customerData.GetAll(0, 50, "");
-            // Note: renaming GetStatus(...) to ^^GetAll(...) and removing Status parameter
-            return Ok(customers); //200
+            var models = customers.Select(c => new CustomerDisplayViewModel
+            {
+                CustomerId = c.Id,
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                EmailAddress = c.EmailAddress,
+                PhoneNumber = c.PhoneNumber,
+                OptInNewsletter = c.OptInNewsletter,
+                Type = c.Type,
+                PeferredContactMethod = c.PeferredContactMethod,
+                Status = c.Status,
+                StatusCode = c.StatusCode
+            });
+            return Ok(models);
         }
 
         [HttpGet("{id}")] 
