@@ -49,6 +49,14 @@ namespace SimpleCrm.SqlDbServices
             foreach (var expression in expressions)
             { //expresion like lastName DESC
                 var propertyDirectionArr = expression.Split(' ');
+                if (expressions.Length > 2)
+                {
+                    throw new System.Exception("invalid search");
+                }
+                if (!allowedFields.Contains(""))
+                    {
+                    throw new System.Exception("invalid search");
+                }
             }
             var query = simpleCrmDbContext.Customers
                 .Where(x => x.Status == status);
@@ -56,23 +64,10 @@ namespace SimpleCrm.SqlDbServices
             {
                 query = query.OrderBy(orderBy);
             }
-            if (expressions.Length != 2)
-            {
-                throw new System.Exception("invalid search"); 
-            }
-            if (expressions[1] != "ASC" || expressions[1] != "DESC")
-            {
-                throw new System.Exception("Invalid sort function");
-            }
 
-            if (!allowedFields.Contains(orderBy))
-            {
-                throw new System.Exception("Invalid sort fields");
-            }
             return query.Skip(pageIndex * take)
               .Take(take)
               .ToList();
-
         }
 
         public void Delete(int id)
