@@ -44,18 +44,22 @@ namespace SimpleCrm.SqlDbServices
         public List<Customer> GetAll(int pageIndex, int take, string orderBy)
         {
             var allowedFields = new string[] { "firstname", "lastname", "phonenumber", "optinnewsletter", "type", "emailaddress", "preferredcontactmethod", "ststuscode" };
-            //validate the orderby,array of strings column names need to be declared if not throw exception
-            string[] expressions = orderBy.Split(',');
+            
+            string[] expressions = orderBy.ToLower().Split(',');
             foreach (var expression in expressions)
-            { //expresion like lastName DESC
+            { //expresion like "lastName DESC"
                 var propertyDirectionArr = expression.Split(' ');
-                if (expressions.Length > 2)
+                if (propertyDirectionArr.Length > 2)
                 {
                     throw new System.Exception("invalid search");
                 }
-                if (!allowedFields.Contains(""))
-                    {
-                    throw new System.Exception("invalid search");
+                if (propertyDirectionArr.Length > 1 && propertyDirectionArr[1] != "asc" && propertyDirectionArr[1] != "desc")
+                {
+                    throw new System.Exception("invalid sort direction");
+                }
+                if (!allowedFields.Contains(propertyDirectionArr[0]))
+                {
+                    throw new System.Exception("Invalid Column Name");
                 }
             }
             var query = simpleCrmDbContext.Customers
