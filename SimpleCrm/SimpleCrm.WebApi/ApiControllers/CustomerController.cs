@@ -31,7 +31,6 @@ namespace SimpleCrm.WebApi.ApiControllers
                 OptInNewsletter = c.OptInNewsletter,
                 Type = c.Type,
                 PeferredContactMethod = c.PeferredContactMethod,
-                Status = c.Status,
                 StatusCode = c.StatusCode
             });
             return Ok(models);

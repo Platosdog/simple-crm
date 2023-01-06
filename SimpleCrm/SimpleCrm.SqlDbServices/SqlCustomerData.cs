@@ -9,7 +9,6 @@ namespace SimpleCrm.SqlDbServices
     public class SqlCustomerData : ICustomerData
     {
         private readonly SimpleCrmDbContext simpleCrmDbContext;
-        private readonly CustomerStatus status;
 
         public SqlCustomerData(SimpleCrmDbContext simpleCrmDbContext)
         {
@@ -57,19 +56,20 @@ namespace SimpleCrm.SqlDbServices
                 {
                     throw new System.Exception("invalid sort direction");
                 }
-                if (!allowedFields.Contains(propertyDirectionArr[0]))
+                if (allowedFields.Contains(propertyDirectionArr[0]))
                 {
                     throw new System.Exception("Invalid Column Name");
                 }
             }
-            var query = simpleCrmDbContext.Customers
-                .Where(x => x.Status == status);
-            if (!string.IsNullOrWhiteSpace(orderBy))
+                
+            if (string.IsNullOrWhiteSpace(orderBy))
             {
-                query = query.OrderBy(orderBy);
+                orderBy = "LastName asc";
             }
 
-            return query.Skip(pageIndex * take)
+            return simpleCrmDbContext.Customers
+              .OrderBy(orderBy)
+              .Skip(pageIndex * take)
               .Take(take)
               .ToList();
         }
