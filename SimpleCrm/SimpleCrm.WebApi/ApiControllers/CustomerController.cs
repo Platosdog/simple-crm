@@ -48,9 +48,28 @@ namespace SimpleCrm.WebApi.ApiControllers
         }
 
         [HttpPost("")] 
-        public IActionResult Create([FromBody] Customer model)
+        public IActionResult Create([FromBody] CustomerCreateViewModel model)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            var customer = new Customer
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                EmailAddress = model.EmailAddress,
+                PhoneNumber = model.PhoneNumber,
+                PeferredContactMethod = model.PeferredContactMethod
+            };
+            _customerData.Add(customer);
+            _customerData.Commit();
+            return Ok(new Customer());
         }
 
         [HttpPut("{id}")] 

@@ -64,14 +64,14 @@ namespace SimpleCrm.Web.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var model = new HomePageViewModel()
+            var model = new HomePageViewModel
             {
                 
-                Customers = customerData.GetAll().Select(x => new CustomerModel {
-                    FirstName= x.FirstName, 
-                    LastName= x.LastName, 
-                    Id= x.Id, 
-                    PhoneNumber= x.PhoneNumber,
+                Customers = customerData.GetAll(0, 25, "").Select(X => new CustomerModel {
+                    Id = X.Id,
+                    FirstName = X.FirstName, 
+                    LastName = X.LastName, 
+                    PhoneNumber = X.PhoneNumber,
                 })
             };
             return View(model);

@@ -4,7 +4,6 @@ namespace SimpleCrm
 {
     public interface ICustomerData
     {
-        IEnumerable<Customer> GetAll(int v);
         Customer Get(int id);
         List<Customer> GetAll(int pageIndex, int take, string orderBy);
         void Add(Customer customer);

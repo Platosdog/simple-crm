@@ -85,11 +85,6 @@ namespace SimpleCrm.SqlDbServices
             simpleCrmDbContext.Remove(item);
         }
 
-        public IEnumerable<Customer> GetAll(int v)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Delete()
         {
             throw new NotImplementedException();
