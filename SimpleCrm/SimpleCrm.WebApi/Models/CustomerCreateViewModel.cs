@@ -15,6 +15,7 @@ namespace SimpleCrm.WebApi.Models
         public string PhoneNumber { get; set; }
         public bool OptInNewsletter { get; set; }
         public CustomerType Type { get; set; }
+        [Required()]
         public string EmailAddress { get; set; }
         public InteractionMethod PeferredContactMethod { get; set; }
     }

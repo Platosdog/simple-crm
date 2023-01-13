@@ -50,6 +50,7 @@ namespace SimpleCrm.WebApi.ApiControllers
         [HttpPost("")] 
         public IActionResult Create([FromBody] CustomerCreateViewModel model)
         {
+            
             if (model == null)
             {
                 return BadRequest();
@@ -69,13 +70,32 @@ namespace SimpleCrm.WebApi.ApiControllers
             };
             _customerData.Add(customer);
             _customerData.Commit();
-            return Ok(new Customer());
+            return Ok(customer);
         }
 
-        [HttpPut("{id}")] 
-        public IActionResult Update(int id, [FromBody] Customer model)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] CustomerUpdateViewModel model)
         {
-            throw new NotImplementedException();
+            var customer = _customerData.Get(id);
+            if (customer == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+          
+            {
+                customer.FirstName = model.FirstName;
+                customer.LastName = model.LastName;
+                customer.EmailAddress = model.EmailAddress;
+                customer.PhoneNumber = model.PhoneNumber;
+                customer.PeferredContactMethod = model.PeferredContactMethod;
+            };
+            _customerData.Update(customer);
+            _customerData.Commit();
+            return Ok(customer);
         }
 
         [HttpDelete("{id}")] 
@@ -85,6 +105,10 @@ namespace SimpleCrm.WebApi.ApiControllers
             if (customer == null)
             {
                 return NotFound(); // 404
+            }
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
             }
             _customerData.Delete();
             _customerData.Commit();
