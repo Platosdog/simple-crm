@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Newtonsoft.Json;
 using SimpleCrm.WebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -10,18 +12,29 @@ namespace SimpleCrm.WebApi.ApiControllers
     public class CustomerController : Controller
     {
           
-    private readonly ICustomerData _customerData;
+        private readonly ICustomerData _customerData;
+        private readonly LinkGenerator _linkGenerator;
 
-        public CustomerController(ICustomerData customerData)
+        public CustomerController(ICustomerData customerData, LinkGenerator linkGenerator)
         {
             _customerData = customerData;
+            _linkGenerator = linkGenerator;
         }
 
-        [HttpGet("")] 
-        public IActionResult GetAll()
+        [HttpGet("", Name ="GetCustomers")] 
+        public IActionResult GetAll([FromQuery] int page = 1,[FromQuery] int take = 50)
         {
-            var customers = _customerData.GetAll(0, 50, "");
+            var customers = _customerData.GetAll(page -1, take, "");
+            var next = GetCustomerResourceUri(page + 1, take);
+            var pagination = new PaginationModel
+            {
+                Next = customers.Count < take ? null : GetCustomerResourceUri(page + 1, take),
+                Previous = page <= 1? null : GetCustomerResourceUri(page - 1, take)
+            }; 
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(pagination));
             var models = customers.Select(c => new CustomerDisplayViewModel
+       
             {
                 CustomerId = c.Id,
                 FirstName = c.FirstName,
@@ -35,7 +48,13 @@ namespace SimpleCrm.WebApi.ApiControllers
             });
             return Ok(models);
         }
-
+        private string GetCustomerResourceUri(int page, int take)
+        {
+            return _linkGenerator.GetPathByName(this.HttpContext, "GetCustomers", values: new {
+                page = page,
+                take = take
+            });
+        }
         [HttpGet("{id}")] 
         public IActionResult Get(int id)
         {
