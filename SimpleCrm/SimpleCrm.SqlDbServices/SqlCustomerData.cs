@@ -40,11 +40,15 @@ namespace SimpleCrm.SqlDbServices
             simpleCrmDbContext.SaveChanges();
         }
 
-        public List<Customer> GetAll(int pageIndex, int take, string orderBy)
+        public List<Customer> GetAll(CustomerListParameters resourceParameters)
         {
             var allowedFields = new string[] { "firstname", "lastname", "phonenumber", "optinnewsletter", "type", "emailaddress", "preferredcontactmethod", "ststuscode" };
-            
-            string[] expressions = orderBy.ToLower().Split(',');
+
+            if (string.IsNullOrWhiteSpace(resourceParameters.OrderBy))
+            {
+                resourceParameters.OrderBy = "lastname asc";
+            }
+            string[] expressions = resourceParameters.OrderBy.ToLower().Split(',');
             foreach (var expression in expressions)
             { //expresion like "lastName DESC"
                 var propertyDirectionArr = expression.Split(' ');
@@ -56,21 +60,18 @@ namespace SimpleCrm.SqlDbServices
                 {
                     throw new System.Exception("invalid sort direction");
                 }
-                if (allowedFields.Contains(propertyDirectionArr[0]))
-                {
-                    throw new System.Exception("Invalid Column Name");
-                }
+     
             }
                 
-            if (string.IsNullOrWhiteSpace(orderBy))
+            if (string.IsNullOrWhiteSpace(resourceParameters.OrderBy))
             {
-                orderBy = "LastName asc";
+                resourceParameters.OrderBy = "LastName asc";
             }
 
             return simpleCrmDbContext.Customers
-              .OrderBy(orderBy)
-              .Skip(pageIndex * take)
-              .Take(take)
+              .OrderBy(resourceParameters.OrderBy)
+              .Skip((resourceParameters.Page -1) * resourceParameters.Take)
+              .Take(resourceParameters.Take)
               .ToList();
         }
 

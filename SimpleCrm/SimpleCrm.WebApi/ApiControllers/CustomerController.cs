@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace SimpleCrm.WebApi.ApiControllers
 {
     [Route("api/customer")]
@@ -21,15 +22,14 @@ namespace SimpleCrm.WebApi.ApiControllers
             _linkGenerator = linkGenerator;
         }
 
-        [HttpGet("", Name ="GetCustomers")] 
-        public IActionResult GetAll([FromQuery] int page = 1,[FromQuery] int take = 50)
+        [HttpGet("", Name ="GetCustomers")]
+        public IActionResult GetCustomers([FromQuery] CustomerListParameters resourceParameters)
         {
-            var customers = _customerData.GetAll(page -1, take, "");
-            var next = GetCustomerResourceUri(page + 1, take);
+            var customers = _customerData.GetAll(resourceParameters);
             var pagination = new PaginationModel
             {
-                Next = customers.Count < take ? null : GetCustomerResourceUri(page + 1, take),
-                Previous = page <= 1? null : GetCustomerResourceUri(page - 1, take)
+                Next = customers.Count < resourceParameters.Take ? null : GetCustomerResourceUri(resourceParameters, 1),
+                Previous = resourceParameters.Page <= 1? null : GetCustomerResourceUri(resourceParameters, -1)
             }; 
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(pagination));
@@ -48,11 +48,16 @@ namespace SimpleCrm.WebApi.ApiControllers
             });
             return Ok(models);
         }
-        private string GetCustomerResourceUri(int page, int take)
+        private string GetCustomerResourceUri(CustomerListParameters listParameters, int pageAdjust)
         {
-            return _linkGenerator.GetPathByName(this.HttpContext, "GetCustomers", values: new {
-                page = page,
-                take = take
+            if (listParameters.Page + pageAdjust <= 0)
+                return null; // if current page is first page, there is no previous page url
+
+            return _linkGenerator.GetPathByName(HttpContext, "GetCustomers", values: new
+            {
+                take = listParameters.Take,
+                page = listParameters.Page + pageAdjust, // +1 or -1 from current page of data
+                orderBy = listParameters.OrderBy
             });
         }
         [HttpGet("{id}")] 

@@ -46,7 +46,7 @@ namespace SimpleCrm
 
         }
 
-        public List<Customer> GetAll(int pageIndex, int take, string orderBy)
+        public List<Customer> GetAll(CustomerListParameters resourceParameters)
         {
             throw new NotImplementedException();
         }

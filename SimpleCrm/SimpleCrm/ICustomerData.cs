@@ -5,7 +5,7 @@ namespace SimpleCrm
     public interface ICustomerData
     {
         Customer Get(int id);
-        List<Customer> GetAll(int pageIndex, int take, string orderBy);
+        List<Customer> GetAll(CustomerListParameters listParameters);
         void Add(Customer customer);
         void Update(Customer customer);
         void Delete(int customerId);
