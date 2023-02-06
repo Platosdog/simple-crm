@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +32,11 @@ namespace SimpleCrm.WebApi
             services.AddControllersWithViews();
 
             services.AddScoped<ICustomerData, SqlCustomerData>();
+
+            services.AddSpaStaticFiles(config => 
+            {
+                config.RootPath = Configuration["SpaRoot"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +54,8 @@ namespace SimpleCrm.WebApi
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
 
             app.UseRouting();
 
@@ -59,6 +67,17 @@ namespace SimpleCrm.WebApi
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseWhen(
+             context => !context.Request.Path.StartsWithSegments("/api"),
+              appBuilder => appBuilder.UseSpa(spa =>
+              {
+                  if (env.IsDevelopment())
+                  {
+                      spa.Options.SourcePath = "../simple-crm-cli";
+                      spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
+                              spa.UseAngularCliServer(npmScript: "start");
+                  }
+              }));
         }
     }
 }
