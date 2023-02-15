@@ -67,7 +67,7 @@ namespace SimpleCrm.Web.Controllers
             var model = new HomePageViewModel
             {
                 
-                Customers = customerData.GetAll(0, 25, "").Select(X => new CustomerModel {
+                Customers = customerData.GetAll(new CustomerListParameters { Page = 1, Take = 25 }).Select(X => new CustomerModel {
                     Id = X.Id,
                     FirstName = X.FirstName, 
                     LastName = X.LastName, 
@@ -104,19 +104,19 @@ namespace SimpleCrm.Web.Controllers
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Register(RegisterUserViewModel model)
-        {
-            var register = new RegisterUserViewModel
-            {
-                DisplayName = model.DisplayName,
-                UserName = model.UserName,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword
+        //[HttpPost, ValidateAntiForgeryToken]
+        //public IActionResult Register(RegisterUserViewModel model)
+        //{
+        //    var register = new RegisterUserViewModel
+        //    {
+        //        DisplayName = model.DisplayName,
+        //        UserName = model.UserName,
+        //        Password = model.Password,
+        //        ConfirmPassword = model.ConfirmPassword
 
-            };
-            return View(model);
+        //    };
+        //    return View(model);
 
-        }
+        //}
     }
 }
