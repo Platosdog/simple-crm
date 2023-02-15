@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,15 @@ namespace SimpleCrm.WebApi
             services.AddDbContext<SimpleCrmDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("SimpleCrmConnection")));
+
+            services.AddDbContext<CrmIdentityDbContext>(options =>
+                 options.UseSqlServer(
+                    Configuration.GetConnectionString("SimpleCrmConnection")));
+
+            services.AddDefaultIdentity<CrmUser>()
+              .AddDefaultUI()
+              .AddEntityFrameworkStores<CrmIdentityDbContext>();
+
             services.AddControllersWithViews();
 
             services.AddScoped<ICustomerData, SqlCustomerData>();
@@ -68,15 +78,17 @@ namespace SimpleCrm.WebApi
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
             app.UseWhen(
-             context => !context.Request.Path.StartsWithSegments("/api"),
-              appBuilder => appBuilder.UseSpa(spa =>
-              {
-                  if (env.IsDevelopment())
-                  {
-                      spa.Options.SourcePath = "../simple-crm-cli";
-                      spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
+                context => !context.Request.Path.StartsWithSegments("/api"),
+                appBuilder => appBuilder.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "../simple-crm-cli";
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+                    spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
                               spa.UseAngularCliServer(npmScript: "start");
-                  }
+                  
               }));
         }
     }
