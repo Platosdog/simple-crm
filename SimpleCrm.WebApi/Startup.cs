@@ -9,9 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleCrm.SqlDbServices;
 using System;
+using SimpleCrm.WebApi.Auth;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace SimpleCrm.WebApi
 {
@@ -41,15 +44,37 @@ namespace SimpleCrm.WebApi
 
             services.AddControllersWithViews();
 
+            services.AddRazorPages();
+
             services.AddScoped<ICustomerData, SqlCustomerData>();
 
             services.AddSpaStaticFiles(config => 
             {
                 config.RootPath = Configuration["SpaRoot"];
             });
+            var googleOptions = Configuration.GetSection(nameof(GoogleAuthSettings));
+
+            services.AddAuthentication()
+                .AddCookie(cfg => cfg.SlidingExpiration = true)
+                .AddGoogle(options =>  
+              {
+                    options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
+                    options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
+                });
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+
+            services.AddControllersWithViews(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+            services.AddRazorPages()
+                 .AddMicrosoftIdentityUI();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
