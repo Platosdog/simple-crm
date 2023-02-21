@@ -10,11 +10,7 @@ using Microsoft.Extensions.Hosting;
 using SimpleCrm.SqlDbServices;
 using System;
 using SimpleCrm.WebApi.Auth;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
+
 
 namespace SimpleCrm.WebApi
 {
@@ -56,23 +52,16 @@ namespace SimpleCrm.WebApi
 
             services.AddAuthentication()
                 .AddCookie(cfg => cfg.SlidingExpiration = true)
-                .AddGoogle(options =>  
+                .AddGoogle(options =>
               {
-                    options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
-                    options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
-                });
-            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
-
-            services.AddControllersWithViews(options =>
+                  options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
+                  options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
+              });
+            services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
             {
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
+                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
             });
-            services.AddRazorPages()
-                 .AddMicrosoftIdentityUI();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
