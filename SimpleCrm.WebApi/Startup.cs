@@ -57,11 +57,15 @@ namespace SimpleCrm.WebApi
                   options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
                   options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
               });
-            services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
-            {
-                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
-                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
-            });
+            var microsoftOptions = Configuration.GetSection(nameof(MicrosoftAuthSettings));
+
+            services.AddAuthentication()
+               
+                .AddMicrosoftAccount(options =>
+                {
+                    options.ClientId = microsoftOptions[nameof(MicrosoftAuthSettings.ClientId)];
+                    options.ClientSecret = microsoftOptions[nameof(MicrosoftAuthSettings.ClientSecret)];
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -82,7 +86,7 @@ namespace SimpleCrm.WebApi
 
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -91,6 +95,7 @@ namespace SimpleCrm.WebApi
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
             app.UseWhen(
                 context => !context.Request.Path.StartsWithSegments("/api"),
                 appBuilder => appBuilder.UseSpa(spa =>
