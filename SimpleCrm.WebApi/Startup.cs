@@ -10,7 +10,9 @@ using Microsoft.Extensions.Hosting;
 using SimpleCrm.SqlDbServices;
 using System;
 using SimpleCrm.WebApi.Auth;
-
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SimpleCrm.WebApi
 {
@@ -21,6 +23,8 @@ namespace SimpleCrm.WebApi
             Configuration = configuration;
         }
 
+        private const string SecretKey = "whywontyouwork"; //<-- NEW: make up a random key here
+        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -34,6 +38,15 @@ namespace SimpleCrm.WebApi
                  options.UseSqlServer(
                     Configuration.GetConnectionString("SimpleCrmConnection")));
 
+            var jwtOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+            services.Configure<JwtIssuerOptions>(options =>
+            {
+                options.Issuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
+                options.Audience = jwtOptions[nameof(JwtIssuerOptions.Audience)];
+                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+                // optionally: allow configuration overide of ValidFor (defaults to 120 mins)
+            });
+
             services.AddDefaultIdentity<CrmUser>()
               .AddDefaultUI()
               .AddEntityFrameworkStores<CrmIdentityDbContext>();
@@ -44,29 +57,43 @@ namespace SimpleCrm.WebApi
 
             services.AddScoped<ICustomerData, SqlCustomerData>();
 
-            services.AddSpaStaticFiles(config => 
+            services.AddSpaStaticFiles(config =>
             {
                 config.RootPath = Configuration["SpaRoot"];
             });
             var googleOptions = Configuration.GetSection(nameof(GoogleAuthSettings));
-
-            services.AddAuthentication()
-                .AddCookie(cfg => cfg.SlidingExpiration = true)
-                .AddGoogle(options =>
-              {
-                  options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
-                  options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
-              });
             var microsoftOptions = Configuration.GetSection(nameof(MicrosoftAuthSettings));
 
-            services.AddAuthentication()
-               
-                .AddMicrosoftAccount(options =>
-                {
-                    options.ClientId = microsoftOptions[nameof(MicrosoftAuthSettings.ClientId)];
-                    options.ClientSecret = microsoftOptions[nameof(MicrosoftAuthSettings.ClientSecret)];
-                });
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+             .AddGoogle(options =>
+             {
+                 options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
+                 options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
+             })
+             .AddMicrosoftAccount(options =>
+             {
+                 options.ClientId = microsoftOptions[nameof(MicrosoftAuthSettings.ClientId)];
+                 options.ClientSecret = microsoftOptions[nameof(MicrosoftAuthSettings.ClientSecret)];
+             })
+             .AddJwtBearer(configureOptions =>
+             {
+                 configureOptions.ClaimsIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
+                 configureOptions.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(SecretKey),
+                     ValidateIssuer = false,
+                     ValidateAudience = false
+                 };
+                 configureOptions.SaveToken = true;
+             });
         }
+
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -77,7 +104,7 @@ namespace SimpleCrm.WebApi
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -106,9 +133,9 @@ namespace SimpleCrm.WebApi
                         spa.UseAngularCliServer(npmScript: "start");
                     }
                     spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
-                              spa.UseAngularCliServer(npmScript: "start");
-                  
-              }));
+                    spa.UseAngularCliServer(npmScript: "start");
+
+                }));
         }
     }
 }
