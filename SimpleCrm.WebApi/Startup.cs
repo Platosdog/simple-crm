@@ -85,7 +85,7 @@ namespace SimpleCrm.WebApi
                  configureOptions.TokenValidationParameters = new TokenValidationParameters
                  {
                      ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = new SymmetricSecurityKey(SecretKey),
+                     IssuerSigningKey = _signingKey,
                      ValidateIssuer = false,
                      ValidateAudience = false
                  };
