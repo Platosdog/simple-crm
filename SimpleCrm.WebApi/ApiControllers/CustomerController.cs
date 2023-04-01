@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using SimpleCrm.WebApi.Models;
@@ -10,6 +11,7 @@ using System.Linq;
 namespace SimpleCrm.WebApi.ApiControllers
 {
     [Route("api/customer")]
+    [Authorize(Policy = "ApiUser")]
     public class CustomerController : Controller
     {
           

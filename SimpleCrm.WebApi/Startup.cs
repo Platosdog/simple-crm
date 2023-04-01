@@ -47,95 +47,139 @@ namespace SimpleCrm.WebApi
                 // optionally: allow configuration overide of ValidFor (defaults to 120 mins)
             });
 
-            services.AddDefaultIdentity<CrmUser>()
+            var tokenValidationPrms = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)],
+                ValidateAudience = true,
+                ValidAudience = jwtOptions[nameof(JwtIssuerOptions.Audience)],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _signingKey,
+                RequireExpirationTime = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+            services.AddAuthentication(options =>
+            {   //tells ASP.Net Identity the application is using JWT
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(configureOptions =>
+            {   //tells ASP.Net to look for Bearer authentication with these options
+                configureOptions.ClaimsIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
+                configureOptions.TokenValidationParameters = tokenValidationPrms;
+                configureOptions.SaveToken = true; // allows token access in controller
+            });
+
+            var identityBuilder = services.AddIdentityCore<CrmUser>(o => {
+                //TODO: you may override any default password rules here.
+            });
+            identityBuilder = new IdentityBuilder(identityBuilder.UserType,
+              typeof(IdentityRole), identityBuilder.Services);
+            identityBuilder.AddEntityFrameworkStores<CrmIdentityDbContext>();
+            identityBuilder.AddRoleValidator<RoleValidator<IdentityRole>>();
+            identityBuilder.AddRoleManager<RoleManager<IdentityRole>>();
+            identityBuilder.AddSignInManager<SignInManager<CrmUser>>();
+            identityBuilder.AddDefaultTokenProviders();
+
+            services.AddSingleton<IJwtFactory, JwtFactory>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiUser", policy => policy.RequireClaim(
+                  Constants.JwtClaimIdentifiers.Rol,
+                  Constants.JwtClaims.ApiAccess
+                ));
+
+                services.AddDefaultIdentity<CrmUser>()
               .AddDefaultUI()
               .AddEntityFrameworkStores<CrmIdentityDbContext>();
 
-            services.AddControllersWithViews();
+                services.AddControllersWithViews();
 
-            services.AddRazorPages();
+                services.AddRazorPages();
 
-            services.AddScoped<ICustomerData, SqlCustomerData>();
+                services.AddScoped<ICustomerData, SqlCustomerData>();
 
-            services.AddSpaStaticFiles(config =>
-            {
-                config.RootPath = Configuration["SpaRoot"];
-            });
-            var googleOptions = Configuration.GetSection(nameof(GoogleAuthSettings));
-            var microsoftOptions = Configuration.GetSection(nameof(MicrosoftAuthSettings));
+                services.AddSpaStaticFiles(config =>
+                {
+                    config.RootPath = Configuration["SpaRoot"];
+                });
+                var googleOptions = Configuration.GetSection(nameof(GoogleAuthSettings));
+                var microsoftOptions = Configuration.GetSection(nameof(MicrosoftAuthSettings));
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-             .AddGoogle(options =>
-             {
-                 options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
-                 options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
-             })
-             .AddMicrosoftAccount(options =>
-             {
-                 options.ClientId = microsoftOptions[nameof(MicrosoftAuthSettings.ClientId)];
-                 options.ClientSecret = microsoftOptions[nameof(MicrosoftAuthSettings.ClientSecret)];
-             })
-             .AddJwtBearer(configureOptions =>
-             {
-                 configureOptions.ClaimsIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
-                 configureOptions.TokenValidationParameters = new TokenValidationParameters
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                 .AddGoogle(options =>
                  {
-                     ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = _signingKey,
-                     ValidateIssuer = false,
-                     ValidateAudience = false
-                 };
-                 configureOptions.SaveToken = true;
-             });
-        }
+                     options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
+                     options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
+                 })
+                 .AddMicrosoftAccount(options =>
+                 {
+                     options.ClientId = microsoftOptions[nameof(MicrosoftAuthSettings.ClientId)];
+                     options.ClientSecret = microsoftOptions[nameof(MicrosoftAuthSettings.ClientSecret)];
+                 })
+                 .AddJwtBearer(configureOptions =>
+                 {
+                     configureOptions.ClaimsIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
+                     configureOptions.TokenValidationParameters = new TokenValidationParameters
+                     {
+                         ValidateIssuerSigningKey = true,
+                         IssuerSigningKey = _signingKey,
+                         ValidateIssuer = false,
+                         ValidateAudience = false
+                     };
+                     configureOptions.SaveToken = true;
+                 });
+            });
 
 
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-
-
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            app.UseWhen(
-                context => !context.Request.Path.StartsWithSegments("/api"),
-                appBuilder => appBuilder.UseSpa(spa =>
+                if (env.IsDevelopment())
                 {
-                    spa.Options.SourcePath = "../simple-crm-cli";
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-                    spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
-                    spa.UseAngularCliServer(npmScript: "start");
+                    app.UseDeveloperExceptionPage();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
 
-                }));
+                    app.UseHsts();
+                }
+                app.UseHttpsRedirection();
+                app.UseStaticFiles();
+                app.UseSpaStaticFiles();
+
+
+                app.UseRouting();
+                app.UseAuthentication();
+                app.UseAuthorization();
+
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                });
+
+                app.UseWhen(
+                    context => !context.Request.Path.StartsWithSegments("/api"),
+                    appBuilder => appBuilder.UseSpa(spa =>
+                    {
+                        spa.Options.SourcePath = "../simple-crm-cli";
+                        if (env.IsDevelopment())
+                        {
+                            spa.UseAngularCliServer(npmScript: "start");
+                        }
+                        spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
+                        spa.UseAngularCliServer(npmScript: "start");
+
+                    }));
+            }
         }
     }
 }
