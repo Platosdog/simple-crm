@@ -138,7 +138,7 @@ namespace SimpleCrm.WebApi
 
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
             {
                 if (env.IsDevelopment())
                 {

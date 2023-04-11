@@ -9,5 +9,6 @@ namespace SimpleCrm.WebApi.Models
         public string JWT { get; set; }
         public ArraySegment<String> Roles { get; set; }
         public string AccountID { get; set; }
+        public string Password { get; set; }
     }
 }
