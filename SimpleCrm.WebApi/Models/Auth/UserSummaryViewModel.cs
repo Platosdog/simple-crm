@@ -7,8 +7,7 @@ namespace SimpleCrm.WebApi.Models
         public string Name { get; set; }
         public string EmailAddress { get; set; }
         public string JWT { get; set; }
-        public ArraySegment<String> Roles { get; set; }
-        public string AccountID { get; set; }
         public string Password { get; set; }
+        public System.Collections.Generic.IList<string> Roles { get; set; }
     }
 }

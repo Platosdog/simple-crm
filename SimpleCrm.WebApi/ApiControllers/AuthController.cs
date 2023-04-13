@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCrm.WebApi.Auth;
 using SimpleCrm.WebApi.Models;
-using System.Linq;
-
 
 namespace SimpleCrm.WebApi.ApiControllers
 {
@@ -67,7 +65,10 @@ namespace SimpleCrm.WebApi.ApiControllers
 
         private async Task<UserSummaryViewModel> GetUserData(CrmUser user)
         {
-            if (user == null) return null;
+            if (user == null)
+            {
+                return null;
+            }
 
             var roles = await _userManager.GetRolesAsync(user);
             if (roles.Count == 0)
@@ -77,12 +78,16 @@ namespace SimpleCrm.WebApi.ApiControllers
 
             var jwt = await _jwtFactory.GenerateEncodedToken(
                 user.UserName, _jwtFactory.GenerateClaimsIdentity(user.UserName, user.Id.ToString()));
+
             var userModel = new UserSummaryViewModel
             {
                 Id = user.Id,
                 Name = user.UserName,
-                EmailAddress = user.Email
+                EmailAddress = user.Email,
+                Roles = roles,
+                JWT = jwt,
             };
+            return userModel;
         }
     }
 }

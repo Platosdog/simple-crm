@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using SimpleCrm.SqlDbServices;
 using System;
 using SimpleCrm.WebApi.Auth;
@@ -135,51 +130,7 @@ namespace SimpleCrm.WebApi
                      configureOptions.SaveToken = true;
                  });
             });
-
-
-
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-            {
-                if (env.IsDevelopment())
-                {
-                    app.UseDeveloperExceptionPage();
-                }
-                else
-                {
-                    app.UseExceptionHandler("/Home/Error");
-
-                    app.UseHsts();
-                }
-                app.UseHttpsRedirection();
-                app.UseStaticFiles();
-                app.UseSpaStaticFiles();
-
-
-                app.UseRouting();
-                app.UseAuthentication();
-                app.UseAuthorization();
-
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=Home}/{action=Index}/{id?}");
-                });
-
-                app.UseWhen(
-                    context => !context.Request.Path.StartsWithSegments("/api"),
-                    appBuilder => appBuilder.UseSpa(spa =>
-                    {
-                        spa.Options.SourcePath = "../simple-crm-cli";
-                        if (env.IsDevelopment())
-                        {
-                            spa.UseAngularCliServer(npmScript: "start");
-                        }
-                        spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
-                        spa.UseAngularCliServer(npmScript: "start");
-
-                    }));
-            }
+   
         }
     }
 }
