@@ -8,6 +8,11 @@ using SimpleCrm.WebApi.Auth;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SimpleCrm.WebApi
 {
@@ -25,6 +30,8 @@ namespace SimpleCrm.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
+            services.AddControllers();
             services.AddDbContext<SimpleCrmDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("SimpleCrmConnection")));
@@ -65,7 +72,8 @@ namespace SimpleCrm.WebApi
                 configureOptions.SaveToken = true; // allows token access in controller
             });
 
-            var identityBuilder = services.AddIdentityCore<CrmUser>(o => {
+            var identityBuilder = services.AddIdentityCore<CrmUser>(o =>
+            {
                 //TODO: you may override any default password rules here.
             });
             identityBuilder = new IdentityBuilder(identityBuilder.UserType,
@@ -130,7 +138,50 @@ namespace SimpleCrm.WebApi
                      configureOptions.SaveToken = true;
                  });
             });
-   
+
+        }
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            
+
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseWhen(
+                context => !context.Request.Path.StartsWithSegments("/api"),
+                appBuilder => appBuilder.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "../simple-crm-cli";
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+                    spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
+                    spa.UseAngularCliServer(npmScript: "start");
+
+                }));
         }
     }
 }
+   
