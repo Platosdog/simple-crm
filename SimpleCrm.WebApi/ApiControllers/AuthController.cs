@@ -4,90 +4,156 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCrm.WebApi.Auth;
 using SimpleCrm.WebApi.Models;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace SimpleCrm.WebApi.ApiControllers
 {
+    [Route("auth")]
     public class AuthController : Controller
     {
         private readonly UserManager<CrmUser> _userManager;
         private readonly IJwtFactory _jwtFactory;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
+        private readonly MicrosoftAuthSettings _microsoftAuthSettings;
+        private readonly MicrosoftAuthSettings microsoftAuthSettings;
 
-        public AuthController(UserManager<CrmUser> userManager, IJwtFactory jwtFactory)
+        public AuthController(UserManager<CrmUser> userManager, IJwtFactory jwtFactory,
+        IConfiguration configuration, ILogger<AuthController> logger)
         {
+            this._configuration = configuration;
+            this._microsoftAuthSettings = microsoftAuthSettings;
             this._userManager = userManager;
             this._jwtFactory = jwtFactory;
+            this._logger = logger;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Post([FromBody] UserSummaryViewModel credentials)
+        [HttpGet("external/microsoft")]
+        public IActionResult GetMicrosoft()
         {
-            if (!ModelState.IsValid)
+            return Ok(new
             {
-                return UnprocessableEntity(ModelState);
+                client_id = _microsoftAuthSettings.ClientId,
+                scope = "https://graph.microsoft.com/user.read",
+                state = ""
+            });
+        }
+
+        [HttpPost("external/microsoft")]
+        public async Task<IActionResult> PostMicrosoft([FromBody] MicrosoftAuthViewModel model)
+        {
+            var verifier = new MicrosoftAuthVerifier<AuthController>(_microsoftAuthSettings, _configuration["HttpHost"] + (model.BaseHref ?? "/"), _logger);
+            var profile = await verifier.AcquireUser(model.AccessToken);
+
+            if (profile.IsSuccessful == false)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, profile.Error.Message);
             }
 
+            if (String.IsNullOrWhiteSpace(profile.Mail))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Email address is required");
+            }
 
-            var user = await Authenticate(credentials.EmailAddress, credentials.Password);
+            var UserLoginInfo = new UserLoginInfo("Microsoft", profile.Id, profile.DisplayName);
+
+            var user = await _userManager.FindByEmailAsync(profile.Mail);
             if (user == null)
             {
-                return UnprocessableEntity("Invalid username or password.");
+
+                user = new CrmUser
+                {
+                    DisplayName = profile.DisplayName,
+                    Email = profile.Mail,
+                    PhoneNumber = profile.MobilePhone,
+                    UserName = profile.Mail
+                };
+
+                await _userManager.CreateAsync(user);
             }
 
-
             var userModel = await GetUserData(user);
-
             return Ok(userModel);
         }
 
-        private async Task<CrmUser> Authenticate(string emailAddress, string password)
+
+        [Authorize(Policy = "ApiUser")]
+        [HttpPost("verify")] // POST api/auth/verify
+        public async Task<IActionResult> Verify()
         {
-            if (emailAddress == "" || password == "")
+            if (User.Identity.IsAuthenticated)
             {
-                return null;
+                var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+                if (user == null)
+                    return Forbid();
+                var userModel = await GetUserData(user);
+                return new ObjectResult(userModel);
             }
 
-            var currentUser = await _userManager.FindByEmailAsync(emailAddress);
-            if (currentUser == null)
-            {
-                var rand = new Random(DateTime.Now.Second).Next(2, 38);
-                await Task.Delay(rand);
-                return null;
-            }
-
-            var isUser = await _userManager.CheckPasswordAsync(currentUser, password);
-            if (isUser)
-            {
-                return currentUser;
-            }
-
-            return null;
+            return Forbid();
         }
 
-        private async Task<UserSummaryViewModel> GetUserData(CrmUser user)
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Post([FromBody] CredentialsViewModel credentials)
         {
-            if (user == null)
+                if (!ModelState.IsValid)
+                {
+                    return UnprocessableEntity(ModelState);
+                }
+                var user = await Authenticate(credentials.EmailAddress, credentials.Password);
+                if (user == null)
+                {
+                    return UnprocessableEntity("Invalid username or password");
+                }
+
+                var userModel = await GetUserData(user);
+
+                return Ok(userModel);
+            }
+
+            private async Task<CrmUser> Authenticate(string emailAddress, string password)
             {
+                if (emailAddress == "" || password == "")
+                {
+                    return null;
+                }
+                var currentUser = await _userManager.FindByEmailAsync(emailAddress);
+                if (currentUser == null)
+                {
+                    // random number of ms to deter timing attacks
+                    var rand = new Random(DateTime.Now.Second).Next(2, 38);
+                    await Task.Delay(rand);
+                    return null;
+                }
+                var isUser = await _userManager.CheckPasswordAsync(currentUser, password);
+                if (isUser)
+                {
+                    return currentUser;
+                }
                 return null;
             }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            if (roles.Count == 0)
+            private async Task<UserSummaryViewModel> GetUserData(CrmUser user)
             {
-                roles.Add("prospect");
+                if (user == null) return null;
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Count == 0)
+                {
+                    roles.Add("prospect");
+                }
+                var jwt = await _jwtFactory.GenerateEncodedToken(user.UserName, _jwtFactory.GenerateClaimsIdentity(user.UserName, user.Id.ToString()));
+                var userModel = new UserSummaryViewModel
+                {
+                    Id = user.Id,
+                    Name = user.UserName,
+                    EmailAddress = user.Email,
+                    Roles = roles.ToArray()
+                };
+                return userModel;
             }
-
-            var jwt = await _jwtFactory.GenerateEncodedToken(
-                user.UserName, _jwtFactory.GenerateClaimsIdentity(user.UserName, user.Id.ToString()));
-
-            var userModel = new UserSummaryViewModel
-            {
-                Id = user.Id,
-                Name = user.UserName,
-                EmailAddress = user.Email,
-                Roles = roles,
-                JWT = jwt,
-            };
-            return userModel;
         }
     }
-}
