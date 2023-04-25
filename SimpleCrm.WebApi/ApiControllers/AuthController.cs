@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 
 namespace SimpleCrm.WebApi.ApiControllers
@@ -22,7 +23,7 @@ namespace SimpleCrm.WebApi.ApiControllers
         private readonly MicrosoftAuthSettings _microsoftAuthSettings;
         private readonly MicrosoftAuthSettings microsoftAuthSettings;
 
-        public AuthController(UserManager<CrmUser> userManager, IJwtFactory jwtFactory,
+        public AuthController(UserManager<CrmUser> userManager, IJwtFactory jwtFactory, 
         IConfiguration configuration, ILogger<AuthController> logger)
         {
             this._configuration = configuration;
@@ -97,6 +98,40 @@ namespace SimpleCrm.WebApi.ApiControllers
             return Forbid();
         }
 
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity("1 Email or password malformed");
+            }
+
+            var user = new CrmUser
+            {
+                UserName = model.EmailAddress,
+                DisplayName = model.DisplayName,
+                Email = model.EmailAddress
+            };
+
+            var createResult = await this._userManager.CreateAsync(user, model.Password);
+
+            if (!createResult.Succeeded)
+            {
+                return UnprocessableEntity($"2 Email or password malformed.");
+            }
+
+            user = await Authenticate(model.EmailAddress, model.Password);
+            if (user == null)
+            {
+                return UnprocessableEntity("3 Email or password malformed");
+            }
+
+
+            var userModel = await GetUserData(user);
+
+            return Ok(userModel);
+
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Post([FromBody] CredentialsViewModel credentials)
