@@ -186,6 +186,7 @@ namespace SimpleCrm.WebApi.ApiControllers
                     Id = user.Id,
                     Name = user.UserName,
                     EmailAddress = user.Email,
+                    Jwt = jwt,
                     Roles = roles.ToArray()
                 };
                 return userModel;

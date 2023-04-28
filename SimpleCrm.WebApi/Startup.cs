@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace SimpleCrm.WebApi
 {
     public class Startup
@@ -30,8 +31,13 @@ namespace SimpleCrm.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerDocument();
             services.AddControllersWithViews();
             services.AddControllers();
+            services.AddSpaStaticFiles((config =>
+            {
+                config.RootPath = Configuration["SpaRoot"];
+            }));
             services.AddDbContext<SimpleCrmDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("SimpleCrmConnection")));
@@ -138,7 +144,12 @@ namespace SimpleCrm.WebApi
                      configureOptions.SaveToken = true;
                  });
             });
-
+                services.AddDefaultIdentity<CrmUser>()
+                    .AddDefaultUI()
+                    .AddEntityFrameworkStores<CrmIdentityDbContext>();
+                services.AddControllersWithViews();
+                services.AddRazorPages();
+                services.AddScoped<ICustomerData, SqlCustomerData>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -154,15 +165,22 @@ namespace SimpleCrm.WebApi
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
 
             app.UseWhen(
@@ -174,7 +192,7 @@ namespace SimpleCrm.WebApi
                     {
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-                    spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds
+                    spa.Options.StartupTimeout = new TimeSpan(0, 0, 300); //300 seconds 
                     spa.UseAngularCliServer(npmScript: "start");
 
                 }));

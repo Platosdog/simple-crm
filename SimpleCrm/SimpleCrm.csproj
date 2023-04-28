@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.19" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.19" />
+    <PackageReference Include="NSwag.AspNetCore" Version="3.19.1" />
   </ItemGroup>
 
 </Project>
