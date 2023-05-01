@@ -67,16 +67,7 @@ namespace SimpleCrm.WebApi
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
-            services.AddAuthentication(options =>
-            {   //tells ASP.Net Identity the application is using JWT
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(configureOptions =>
-            {   //tells ASP.Net to look for Bearer authentication with these options
-                configureOptions.ClaimsIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
-                configureOptions.TokenValidationParameters = tokenValidationPrms;
-                configureOptions.SaveToken = true; // allows token access in controller
-            });
+
 
             var identityBuilder = services.AddIdentityCore<CrmUser>(o =>
             {
@@ -99,7 +90,7 @@ namespace SimpleCrm.WebApi
                   Constants.JwtClaims.ApiAccess
                 ));
 
-                services.AddDefaultIdentity<CrmUser>()
+            services.AddDefaultIdentity<CrmUser>()
               .AddDefaultUI()
               .AddEntityFrameworkStores<CrmIdentityDbContext>();
 
@@ -121,6 +112,7 @@ namespace SimpleCrm.WebApi
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
+
                  .AddGoogle(options =>
                  {
                      options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
@@ -156,11 +148,11 @@ namespace SimpleCrm.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
