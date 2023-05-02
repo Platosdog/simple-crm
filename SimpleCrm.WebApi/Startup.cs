@@ -13,7 +13,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.AspNetCore.Mvc;
-
+using NSwag.Generation.Processors.Security;
+using NSwag;
+using NSwag.AspNetCore;
+using System.Collections.Generic;
 
 namespace SimpleCrm.WebApi
 {
@@ -31,7 +34,15 @@ namespace SimpleCrm.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(config =>
+            {
+                config.DocumentName = "v1.0";
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1.0";
+                };
+                config.ApiGroupNames = new[] { "1.0" };
+            });
             services.AddControllersWithViews();
             services.AddControllers();
             services.AddSpaStaticFiles((config =>
@@ -136,7 +147,23 @@ namespace SimpleCrm.WebApi
                      configureOptions.SaveToken = true;
                  });
             });
-                services.AddDefaultIdentity<CrmUser>()
+            services.AddOpenApiDocument(options =>
+            {
+                options.DocumentName = "v1";
+                options.Title = "SimpleCrm";
+                options.Version = "1.0";
+                options.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT token", new List<string>(),
+                new OpenApiSecurityScheme
+                {
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Name = "Authorization",
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Description = "Type into the textbox: `Bearer {your_JWT_token}`. You can get a JWT from endpoints: '/auth/register' or '/auth/login'"
+                }));
+                options.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
+            });
+
+            services.AddDefaultIdentity<CrmUser>()
                     .AddDefaultUI()
                     .AddEntityFrameworkStores<CrmIdentityDbContext>();
                 services.AddControllersWithViews();
@@ -165,7 +192,17 @@ namespace SimpleCrm.WebApi
             app.UseAuthorization();
 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi3(settings =>
+            {
+                var microsoftOptions = Configuration.GetSection(nameof(MicrosoftAuthSettings));
+                settings.OAuth2Client = new OAuth2ClientSettings
+                {
+                    ClientId = microsoftOptions[nameof(MicrosoftAuthSettings.ClientId)],
+                    ClientSecret = microsoftOptions[nameof(MicrosoftAuthSettings.ClientSecret)],
+                    AppName = "Simple CRM",
+                    Realm = "Nexul Academy"
+                };
+            });
 
             app.UseEndpoints(endpoints =>
             {
