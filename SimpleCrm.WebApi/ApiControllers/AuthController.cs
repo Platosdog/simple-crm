@@ -133,7 +133,7 @@ namespace SimpleCrm.WebApi.ApiControllers
 
         }
 
-        [HttpPost("login")]
+        [HttpPost("login"), AllowAnonymous]
         public async Task<IActionResult> Post([FromBody] CredentialsViewModel credentials)
         {
                 if (!ModelState.IsValid)

@@ -27,24 +27,14 @@ namespace SimpleCrm.WebApi
             Configuration = configuration;
         }
 
-        private const string SecretKey = "whywontyouwork"; //<-- NEW: make up a random key here
+        private const string SecretKey = "sdkdhsHOQPdpdkQNSHsjsSDFKJqzkpdnf"; //<-- NEW: make up a random key here
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerDocument(config =>
-            {
-                config.DocumentName = "v1.0";
-                config.PostProcess = document =>
-                {
-                    document.Info.Version = "v1.0";
-                };
-                config.ApiGroupNames = new[] { "1.0" };
-            });
             services.AddControllersWithViews();
-            services.AddControllers();
             services.AddSpaStaticFiles((config =>
             {
                 config.RootPath = Configuration["SpaRoot"];
@@ -78,6 +68,17 @@ namespace SimpleCrm.WebApi
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+             .AddJwtBearer(configureOptions =>
+             {
+                 configureOptions.ClaimsIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
+                 configureOptions.TokenValidationParameters = tokenValidationPrms;
+                 configureOptions.SaveToken = true;
+             });
 
 
             var identityBuilder = services.AddIdentityCore<CrmUser>(o =>
@@ -100,53 +101,22 @@ namespace SimpleCrm.WebApi
                   Constants.JwtClaimIdentifiers.Rol,
                   Constants.JwtClaims.ApiAccess
                 ));
-
-            services.AddDefaultIdentity<CrmUser>()
-              .AddDefaultUI()
-              .AddEntityFrameworkStores<CrmIdentityDbContext>();
-
-                services.AddControllersWithViews();
-
-                services.AddRazorPages();
-
-                services.AddScoped<ICustomerData, SqlCustomerData>();
-
-                services.AddSpaStaticFiles(config =>
-                {
-                    config.RootPath = Configuration["SpaRoot"];
-                });
-                var googleOptions = Configuration.GetSection(nameof(GoogleAuthSettings));
-                var microsoftOptions = Configuration.GetSection(nameof(MicrosoftAuthSettings));
-
-                services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-
-                 .AddGoogle(options =>
-                 {
-                     options.ClientId = googleOptions[nameof(GoogleAuthSettings.ClientId)];
-                     options.ClientSecret = googleOptions[nameof(GoogleAuthSettings.ClientSecret)];
-                 })
-                 .AddMicrosoftAccount(options =>
-                 {
-                     options.ClientId = microsoftOptions[nameof(MicrosoftAuthSettings.ClientId)];
-                     options.ClientSecret = microsoftOptions[nameof(MicrosoftAuthSettings.ClientSecret)];
-                 })
-                 .AddJwtBearer(configureOptions =>
-                 {
-                     configureOptions.ClaimsIssuer = jwtOptions[nameof(JwtIssuerOptions.Issuer)];
-                     configureOptions.TokenValidationParameters = new TokenValidationParameters
-                     {
-                         ValidateIssuerSigningKey = true,
-                         IssuerSigningKey = _signingKey,
-                         ValidateIssuer = false,
-                         ValidateAudience = false
-                     };
-                     configureOptions.SaveToken = true;
-                 });
             });
+
+            services.AddRazorPages();
+
+            services.AddScoped<ICustomerData, SqlCustomerData>();
+
+            services.AddSwaggerDocument(config =>
+            {
+                config.DocumentName = "v1.0";
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1.0";
+                };
+                config.ApiGroupNames = new[] { "1.0" };
+            });
+
             services.AddOpenApiDocument(options =>
             {
                 options.DocumentName = "v1";
@@ -163,12 +133,6 @@ namespace SimpleCrm.WebApi
                 options.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
             });
 
-            services.AddDefaultIdentity<CrmUser>()
-                    .AddDefaultUI()
-                    .AddEntityFrameworkStores<CrmIdentityDbContext>();
-                services.AddControllersWithViews();
-                services.AddRazorPages();
-                services.AddScoped<ICustomerData, SqlCustomerData>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -227,5 +191,4 @@ namespace SimpleCrm.WebApi
                 }));
         }
     }
-}
-   
+}  
