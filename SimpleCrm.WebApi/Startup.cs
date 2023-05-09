@@ -102,7 +102,7 @@ namespace SimpleCrm.WebApi
                   Constants.JwtClaims.ApiAccess
                 ));
             });
-
+            services.AddResponseCaching();
             services.AddRazorPages();
 
             services.AddScoped<ICustomerData, SqlCustomerData>();
@@ -151,7 +151,7 @@ namespace SimpleCrm.WebApi
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-
+            app.UseResponseCaching();
             app.UseAuthentication();
             app.UseAuthorization();
 

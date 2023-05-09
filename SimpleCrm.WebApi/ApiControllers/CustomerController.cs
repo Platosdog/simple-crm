@@ -25,6 +25,7 @@ namespace SimpleCrm.WebApi.ApiControllers
         }
 
         [HttpGet("", Name ="GetCustomers")]
+        [ResponseCache(Duration = 31, Location = ResponseCacheLocation.Client)]
         public IActionResult GetCustomers([FromQuery] CustomerListParameters resourceParameters)
         {
             var customers = _customerData.GetAll(resourceParameters);
@@ -73,7 +74,8 @@ namespace SimpleCrm.WebApi.ApiControllers
             return Ok(customer); // 200
         }
 
-        [HttpPost("")] 
+        [HttpPost("")]
+        [ResponseCache(Duration = 31, Location = ResponseCacheLocation.Client)]
         public IActionResult Create([FromBody] CustomerCreateViewModel model)
         {
             
