@@ -16,6 +16,7 @@ namespace SimpleCrm.WebApi.Models
         public InteractionMethod PeferredContactMethod { get; set; }
         public CustomerStatus StatusCode { get; set; }
         public CustomerStatus Status { get; set; }
-        public DateTimeOffset LastUpdated { get; set; }
+        public DateTimeOffset LastContactDate { get; set; }
+        public InteractionMethod PreferredContactMethod { get; set; }
     }
 }

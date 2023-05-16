@@ -17,6 +17,7 @@ using NSwag.Generation.Processors.Security;
 using NSwag;
 using NSwag.AspNetCore;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SimpleCrm.WebApi
 {
@@ -34,7 +35,11 @@ namespace SimpleCrm.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddJsonOptions(opts => {
+                    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
             services.AddSpaStaticFiles((config =>
             {
                 config.RootPath = Configuration["SpaRoot"];
