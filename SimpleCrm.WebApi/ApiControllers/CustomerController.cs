@@ -14,7 +14,7 @@ namespace SimpleCrm.WebApi.ApiControllers
     [Authorize(Policy = "ApiUser")]
     public class CustomerController : Controller
     {
-          
+
         private readonly ICustomerData _customerData;
         private readonly LinkGenerator _linkGenerator;
 
@@ -24,7 +24,7 @@ namespace SimpleCrm.WebApi.ApiControllers
             _linkGenerator = linkGenerator;
         }
 
-        [HttpGet("", Name ="GetCustomers")]
+        [HttpGet("", Name = "GetCustomers")]
         [ResponseCache(Duration = 31, Location = ResponseCacheLocation.Client)]
         public IActionResult GetCustomers([FromQuery] CustomerListParameters resourceParameters)
         {
@@ -32,12 +32,12 @@ namespace SimpleCrm.WebApi.ApiControllers
             var pagination = new PaginationModel
             {
                 Next = customers.Count < resourceParameters.Take ? null : GetCustomerResourceUri(resourceParameters, 1),
-                Previous = resourceParameters.Page <= 1? null : GetCustomerResourceUri(resourceParameters, -1)
-            }; 
+                Previous = resourceParameters.Page <= 1 ? null : GetCustomerResourceUri(resourceParameters, -1)
+            };
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(pagination));
             var models = customers.Select(c => new CustomerDisplayViewModel
-       
+
             {
                 CustomerId = c.Id,
                 FirstName = c.FirstName,
@@ -63,7 +63,7 @@ namespace SimpleCrm.WebApi.ApiControllers
                 orderBy = listParameters.OrderBy
             });
         }
-        [HttpGet("{id}")] 
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             var customer = _customerData.Get(id);
@@ -71,6 +71,7 @@ namespace SimpleCrm.WebApi.ApiControllers
             {
                 return NotFound(); // 404
             }
+            Response.Headers.Add("ETag", customer.LastUpdated.ToString());
             return Ok(customer); // 200
         }
 
@@ -78,7 +79,7 @@ namespace SimpleCrm.WebApi.ApiControllers
         [ResponseCache(Duration = 31, Location = ResponseCacheLocation.Client)]
         public IActionResult Create([FromBody] CustomerCreateViewModel model)
         {
-            
+
             if (model == null)
             {
                 return BadRequest();
@@ -113,20 +114,24 @@ namespace SimpleCrm.WebApi.ApiControllers
             {
                 return UnprocessableEntity(ModelState);
             }
-          
+
+            string ifMatch = Request.Headers["If-Match"];
+            if (ifMatch != customer.LastUpdated.ToString())
             {
-                customer.FirstName = model.FirstName;
-                customer.LastName = model.LastName;
-                customer.EmailAddress = model.EmailAddress;
-                customer.PhoneNumber = model.PhoneNumber;
-                customer.PeferredContactMethod = model.PeferredContactMethod;
-            };
+                return Conflict("ETag mis-match. Please try again.");
+            }
+            customer.FirstName = model.FirstName;
+            customer.LastName = model.LastName;
+            customer.EmailAddress = model.EmailAddress;
+            customer.PhoneNumber = model.PhoneNumber;
+            customer.PeferredContactMethod = model.PeferredContactMethod;
+
             _customerData.Update(customer);
             _customerData.Commit();
             return Ok(customer);
         }
 
-        [HttpDelete("{id}")] 
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             var customer = _customerData.Get(id);
@@ -142,6 +147,5 @@ namespace SimpleCrm.WebApi.ApiControllers
             _customerData.Commit();
             return NoContent(); // 204
         }
-
     }
 }

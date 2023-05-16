@@ -13,7 +13,7 @@ namespace SimpleCrm.WebApi.Controllers
     public class HomeController : Controller
     {
         [Route("")]
-        [ResponseCache(Duration = 1440, Location = ResponseCacheLocation.Client)]
+        [ResponseCache(Duration = 60 * 60 * 24 * 3, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
             return View();
