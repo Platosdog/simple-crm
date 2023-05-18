@@ -20,6 +20,14 @@ namespace SimpleCrm.WebApi.ApiControllers
         private readonly IJwtFactory _jwtFactory;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthController> _logger;
+
+        public AuthController(
+            ILogger<AuthController> logger
+          )
+        {
+            _logger = logger;
+        }
+
         private readonly MicrosoftAuthSettings _microsoftAuthSettings;
         private readonly MicrosoftAuthSettings microsoftAuthSettings;
 
@@ -98,9 +106,13 @@ namespace SimpleCrm.WebApi.ApiControllers
             return Forbid();
         }
 
-        [HttpPost("register")]
+        [HttpPost]
+        [Route("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterUserViewModel model)
         {
+            _logger.LogInformation("User created a new account with password.");
+
             if (!ModelState.IsValid)
             {
                 return UnprocessableEntity("1 Email or password malformed");
@@ -130,6 +142,7 @@ namespace SimpleCrm.WebApi.ApiControllers
             var userModel = await GetUserData(user);
 
             return Ok(userModel);
+
 
         }
 

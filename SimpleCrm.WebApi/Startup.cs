@@ -24,6 +24,12 @@ namespace SimpleCrm.WebApi
 {
     public class Startup
     {
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args) // <- enables logging and other pre-configured defaults
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Startup>(); // <- this is your custom middleware in Startup.cs
+                  });
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
