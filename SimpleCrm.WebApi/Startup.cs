@@ -19,6 +19,7 @@ using NSwag.AspNetCore;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+
 namespace SimpleCrm.WebApi
 {
     public class Startup
@@ -35,10 +36,14 @@ namespace SimpleCrm.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews()
-                .AddJsonOptions(opts => {
-                    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
+            services.AddControllersWithViews(opt =>
+            {
+                opt.Filters.Add<GlobalExceptionFilter>();
+            })
+                    .AddJsonOptions(opts =>
+                    {
+                        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    });
 
             services.AddSpaStaticFiles((config =>
             {

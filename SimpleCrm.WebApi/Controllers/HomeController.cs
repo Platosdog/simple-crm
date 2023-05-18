@@ -12,11 +12,12 @@ namespace SimpleCrm.WebApi.Controllers
     [Route("")]
     public class HomeController : Controller
     {
-        [Route("")]
         [ResponseCache(Duration = 60 * 60 * 24 * 3, Location = ResponseCacheLocation.Client)]
+        [Route("")]
         public IActionResult Index()
         {
-            return View();
+            throw new ApiException("An exceptional test. :)");
+            // return View(); // <- comment this out
         }
 
         [Route("about")]
