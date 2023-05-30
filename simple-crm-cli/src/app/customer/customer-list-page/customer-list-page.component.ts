@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Customer } from '../customer.model';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 import { CustomerService } from '../customer.service';
 import { Router } from '@angular/router';
 import { CustomerCreateDialogComponent } from '../customer-create-dialog/customer-create-dialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'crm-customer-list-page',
@@ -14,6 +16,9 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 })
 export class CustomerListPageComponent implements OnInit {
   customers$!: Observable<Customer[]>;
+
+  filteredCustomers$!: Observable<Customer[]>;
+  filterInput = new FormControl();
 
   displayColumns = [ 'icon', 'name', 'phoneNumber', 'emailAddress', 'status', 'edit', 'lastContactDate' ];
 row: any;
@@ -24,6 +29,17 @@ row: any;
     public dialog: MatDialog,
     ) {
     this.customers$ = this.customerService.search('');
+    this.filteredCustomers$ = combineLatest([this.customers$, this.filterInput.valueChanges.pipe(startWith(""))]).pipe(
+      tap(([customers, filter])=> console.log(customers)),
+      map(([customers, filter])=>{
+       return customers.filter((cust)=>{
+         return (`${cust.firstName} ${cust.lastName}`.toLowerCase().includes(filter.toLowerCase()) ||
+              cust.emailAddress.toLowerCase().includes(filter.toLowerCase()) ||
+              cust.phoneNumber.includes(filter)
+            )
+        });
+      })
+    )
   }
 
   ngOnInit(): void { }
