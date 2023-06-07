@@ -18,7 +18,7 @@ const routes: Routes = [
     pathMatch: 'full',
     component: CustomerDetailComponent,
     canActivate: [AuthenticatedGuard]
-  }
+  },
   {
     path: 'not-authorized',
     canActivate: [AuthenticatedGuard],
