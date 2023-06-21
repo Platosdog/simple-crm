@@ -10,6 +10,7 @@ import {MatListModule} from '@angular/material/list';
 import { CustomerModule } from './customer/customer.module';
 import { MatButtonModule } from '@angular/material/button';
 import { AppIconsService } from './app-icons.service';
+import { AccountRoutingModule } from './account/account-routing.module';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { AppIconsService } from './app-icons.service';
     MatSidenavModule,
     MatListModule,
     CustomerModule,
+    AccountRoutingModule,
   ],
   providers: [AppIconsService],
   bootstrap: [AppComponent]
