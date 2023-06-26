@@ -11,6 +11,8 @@ import { CustomerModule } from './customer/customer.module';
 import { MatButtonModule } from '@angular/material/button';
 import { AppIconsService } from './app-icons.service';
 import { AccountRoutingModule } from './account/account-routing.module';
+import { JwtInterceptorInterceptor } from './account/jwt-interceptor.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 @NgModule({
@@ -29,7 +31,7 @@ import { AccountRoutingModule } from './account/account-routing.module';
     CustomerModule,
     AccountRoutingModule,
   ],
-  providers: [AppIconsService],
+  providers: [AppIconsService, {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule {

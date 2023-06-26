@@ -46,11 +46,6 @@ import { NotAuthorizedComponent } from '../account/not-authorized/not-authorized
     MatSnackBarModule
 
     ],
-  providers: [
-    {
-      provide: CustomerService,
-      useClass: CustomerMockService
-    }
-  ]
+  providers: [CustomerService]
 })
 export class CustomerModule { }

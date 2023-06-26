@@ -11,6 +11,9 @@ import { anonymousUser, MicrosoftOptions, UserSummaryViewModel, GoogleOptions } 
   providedIn: 'root'
 })
 export class AccountService {
+  logout() {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl: string;
   private cachedUser = new BehaviorSubject<UserSummaryViewModel>(anonymousUser());
 
@@ -23,7 +26,9 @@ export class AccountService {
       this.baseUrl = `${environment.server}${environment.apiUrl}auth`;
       const cu = localStorage.getItem('currentUser');
       if (cu) {
-        this.cachedUser.next(JSON.parse(cu));
+        const curUser = JSON.parse(cu);
+        this.cachedUser.next(curUser);
+        this.verifyUser(curUser).subscribe({next: (user) => this.setUser(user)});
       }
      }
 
