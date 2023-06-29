@@ -1,7 +1,7 @@
 {
   "name": "simple-crm-cli",
   "version": "0.0.0",
-  "scripts":  {
+  "scripts": {
     "ng": "ng",
     "start": "echo hello && ng serve",
     "build": "ng build",
@@ -22,6 +22,9 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
+    "@ngrx/entity": "13.2",
+    "@ngrx/store": "13.2",
+    "@ngrx/store-devtools": "13.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
