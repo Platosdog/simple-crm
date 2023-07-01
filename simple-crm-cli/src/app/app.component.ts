@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { LayoutState, toggleSidenav } from './store/layout.store';
+import { Store, select } from '@ngrx/store';
+import { LayoutState, selectShowSideNav, toggleSidenav } from './store/layout.store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'crm-root',
@@ -9,9 +10,9 @@ import { LayoutState, toggleSidenav } from './store/layout.store';
 })
 export class AppComponent {
   title = 'Simple Crm';
-  constructor(private store: Store<LayoutState>) { }
-  sideNavToggle() {
-    this.store.dispatch(toggleSidenav());
+  showSideNav$: Observable<boolean>;
+  constructor(private store: Store<LayoutState>) {
+    this.showSideNav$ = this.store.pipe(select(selectShowSideNav)); // <-- NEW
   }
 }
 
