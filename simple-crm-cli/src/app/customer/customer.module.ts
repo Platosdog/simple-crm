@@ -21,6 +21,8 @@ import { CustomerDetailComponent } from './customer-detail/customer-detail.compo
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { StatusIconPipe } from './status-icon.pipe';
 import { NotAuthorizedComponent } from '../account/not-authorized/not-authorized.component';
+import { EffectsModule } from '@ngrx/effects';
+import { CustomerStoreEffects } from './store/customer.store.effects';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { NotAuthorizedComponent } from '../account/not-authorized/not-authorized
     MatInputModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    EffectsModule.forFeature([CustomerStoreEffects])
 
     ],
   providers: [CustomerService]

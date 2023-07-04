@@ -16,6 +16,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { layoutFeatureKey, layoutReducer } from './store/layout.store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     StoreModule.forRoot({}), // for no global state, use an empty object,  {}.
     StoreModule.forFeature(layoutFeatureKey, layoutReducer),
     StoreDevtoolsModule.instrument({
-      name: 'Nexul Academy - Simple CRM'})
+      name: 'Nexul Academy - Simple CRM'}),
+    EffectsModule.forRoot([])
   ],
   providers: [AppIconsService, {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true}],
   bootstrap: [AppComponent]
