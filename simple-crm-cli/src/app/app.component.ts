@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { LayoutState, selectShowSideNav, toggleSidenav } from './store/layout.store';
+import { LayoutState, selectShowSideNav, toggleSidenav } from './customer/store/layout.store';
 import { Observable } from 'rxjs';
 
 @Component({

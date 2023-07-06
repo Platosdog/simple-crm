@@ -14,7 +14,7 @@ import { AccountRoutingModule } from './account/account-routing.module';
 import { JwtInterceptorInterceptor } from './account/jwt-interceptor.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
-import { layoutFeatureKey, layoutReducer } from './store/layout.store';
+import { layoutFeatureKey, layoutReducer } from './customer/store/layout.store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 

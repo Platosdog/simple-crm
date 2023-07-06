@@ -2,7 +2,7 @@ export type InteractionMethod = 'phone' | 'email';
 export type StatusCode = 'checkout' | 'cancel' | 'full' ;
 
 export interface Customer {
-  customerId: number;
+  id: number;
   firstName: string;
   lastName: string;
   phoneNumber: string;
