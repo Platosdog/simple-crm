@@ -15,46 +15,12 @@
       </mat-form-field>
     </form>
 
+    <crm-customer-list-table-component [customers]="filteredCustomers$ | async">
 
-      <table mat-table [dataSource]="filteredCustomers$" matSort>
-      <ng-container matColumnDef="icon">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let row">
-          <mat-icon svgIcon="{{row.statusCode | statusIcon}}"></mat-icon>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let row"> {{row.firstName | titlecase}} {{row.lastName | uppercase}} </td>
-      </ng-container>
-      <ng-container matColumnDef="phoneNumber">
-        <th mat-header-cell *matHeaderCellDef> Phone </th>
-        <td mat-cell *matCellDef="let row"> {{row.phoneNumber}} </td>
-      </ng-container>
-      <ng-container matColumnDef="emailAddress">
-        <th mat-header-cell *matHeaderCellDef> Email </th>
-        <td mat-cell *matCellDef="let row"> {{row.emailAddress}} </td>
-      </ng-container>
-      <ng-container matColumnDef="lastContactDate">
-        <th mat-header-cell *matHeaderCellDef> Last Contact Date </th>
-        <td mat-cell *matCellDef="let row"> {{row.lastContactDate | date:'MMM d, yyyy' }} </td>
-      </ng-container>
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let row"> {{row.statusCode}} </td>
-      </ng-container>
-      <ng-container matColumnDef="edit">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let row" (click)="openDetail(row)">
-          <button mat-icon-button>
-          <mat-icon>edit</mat-icon>
-        </button> </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
-    </table>
+</crm-customer-list-table-component>
+
   </mat-card>
-  <div *ngFor="let customer of filteredCustomers$ | async">
+  <!--div *ngFor="let customer of filteredCustomers$ | async">
     <mat-card>
       <mat-card-title>{{customer.firstName}} {{customer.lastName}}</mat-card-title>
       <mat-card-subtitle>{{customer.statusCode.replace('_', ' ') | titlecase}}</mat-card-subtitle>
@@ -70,4 +36,4 @@
       </mat-card-actions>
       <mat-card-footer>Last Contact Date: {{customer.lastContactDate | date: 'MMM d, yyyy'}}</mat-card-footer>
     </mat-card>
-  </div>
+  </div> -->

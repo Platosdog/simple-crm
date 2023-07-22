@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Customer } from '../customer.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, combineLatest } from 'rxjs';
@@ -16,22 +16,19 @@ import { searchCustomersAction } from 'src/app/store/customer.store';
 @Component({
   selector: 'crm-customer-list-page',
   templateUrl: './customer-list-page.component.html',
-  styleUrls: ['./customer-list-page.component.scss']
+  styleUrls: ['./customer-list-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerListPageComponent implements OnInit {
   customers$!: Observable<Customer[]>;
-
   filteredCustomers$!: Observable<Customer[]>;
   filterInput = new FormControl();
-
-  displayColumns = [ 'icon', 'name', 'phoneNumber', 'emailAddress', 'status', 'edit', 'lastContactDate' ];
-row: any;
+  dataSource!: MatTableDataSource<Customer>;
 
   constructor(
     private customerService: CustomerService,
-    private router: Router,
     public dialog: MatDialog,
-    private store: Store<CustomerState>
+    private store: Store<CustomerState>,
     ) {
     this.customers$ = this.customerService.search('');
     this.customers$ = this.store.pipe(select(selectCustomers));
@@ -51,11 +48,6 @@ row: any;
   }
 
   ngOnInit(): void { }
-  openDetail(item: Customer): void {
-    if(item) {
-      this.router.navigate([`./customer/${item.id}`])
-    }
-  }
 
   addCustomer(): void {
     const dialogRef = this.dialog.open(CustomerCreateDialogComponent, {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { CustomerService } from '../customer.service';
 import { switchMap, map } from 'rxjs';
-import { searchCustomersAction, searchCustomersCompleteAction } from '../customer.store';
+import { searchCustomersAction, searchCustomersCompleteAction } from 'src/app/store/customer.store';
 
 // ngrx effects that trigger side effects for specific actions.
 @Injectable()
