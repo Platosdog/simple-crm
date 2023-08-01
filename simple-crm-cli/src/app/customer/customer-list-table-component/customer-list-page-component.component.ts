@@ -22,4 +22,5 @@ export class CustomerListTableComponentComponent implements OnInit {
       this.router.navigate([`./customers/${item.id}`])
     }
   }
+  trackByUserId = (idx: number, item: Customer) => it
 }
