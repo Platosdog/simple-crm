@@ -4,6 +4,10 @@ import { NotAuthorizedComponent } from './account/not-authorized/not-authorized.
 
 const routes: Routes = [
   {
+    path: 'customers',
+    loadChildren: () => import('./customer/customer.module').then(mod => mod.CustomerModule)
+  },
+  {
   path: '',
   redirectTo: 'customers',
   pathMatch: 'full'

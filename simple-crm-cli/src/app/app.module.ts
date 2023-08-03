@@ -7,7 +7,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
-import { CustomerModule } from './customer/customer.module';
 import { MatButtonModule } from '@angular/material/button';
 import { AppIconsService } from './app-icons.service';
 import { AccountRoutingModule } from './account/account-routing.module';
@@ -31,7 +30,6 @@ import { EffectsModule } from '@ngrx/effects';
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    CustomerModule,
     AccountRoutingModule,
     StoreModule.forRoot({}), // for no global state, use an empty object,  {}.
     StoreModule.forFeature(layoutFeatureKey, layoutReducer),
