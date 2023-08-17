@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <UserSecretsId>10bc3238-58ea-4c47-a36d-12062e53e0ae</UserSecretsId>
+	  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	<UserSecretsId>aspnet-SimpleCrm.WebApi-F89EDB83-5C3D-42C9-9DE4-C9726D1F503B</UserSecretsId>
  	  <SpaRoot>..\simple-crm-cli\</SpaRoot>
 	  <SpaRootDest>ClientApp\</SpaRootDest>
@@ -50,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.19" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.19" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.1.19" />
